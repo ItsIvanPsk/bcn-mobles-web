@@ -1,9 +1,9 @@
 {
-  "name": "quasar-project",
+  "name": "bcn-mobles",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
-  "author": "Ivan",
+  "description": "",
+  "productName": "bcn-mobles",
+  "author": "NerivaLabs",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,8 @@
     "quasar": "^2.18.2",
     "vue": "^3.5.0",
     "vue-i18n": "^11.1.12",
-    "vue-router": "^4.4.0"
+    "vue-router": "^4.4.0",
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "@quasar/app-vite": "^2.4.0",
@@ -38,7 +39,7 @@
     "vue-tsc": "^2.1.6"
   },
   "engines": {
-    "node": "22.x",
+    "node": "20.x",
     "npm": ">=8.0.0"
   }
 }
