@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "quasar dev -m ssr",
     "build": "quasar build -m ssr",
-    "start": "node .output/ssr/index.js"
+    "start": "node dist/ssr/index.js"
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^11.0.0",
@@ -38,7 +38,7 @@
     "vue-tsc": "^2.1.6"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": "22.x",
     "npm": ">=8.0.0"
   }
 }

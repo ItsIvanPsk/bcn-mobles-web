@@ -1,4 +1,10 @@
 {
-  "builds": [{ "src": "package.json", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": ".output/ssr/index.js" }]
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/ssr",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.js"
+    }
+  ]
 }
