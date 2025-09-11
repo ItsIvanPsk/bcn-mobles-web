@@ -1,46 +1,52 @@
 <template>
-  <div class="q-pa-md">
-    <q-card v-if="product" flat bordered class="q-pa-md">
-      <q-img :src="product.image" :ratio="16 / 9" class="rounded-borders">
-        <q-btn
-          class="absolute-top-right q-ma-sm"
-          flat
-          round
-          dense
-          :icon="isFavorite(product.id) ? 'favorite' : 'favorite_border'"
-          color="red"
+  <div class="p-6">
+    <div v-if="product" class="border rounded-lg shadow-md p-6 bg-white">
+      <!-- Imagen -->
+      <div class="relative">
+        <img
+          :src="product.image"
+          alt="Imagen del producto"
+          class="rounded-md w-full aspect-video object-cover"
+        />
+        <button
+          class="absolute top-2 right-2 p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
           @click="toggleFavorite(product.id)"
-        />
-      </q-img>
+        >
+          <span v-if="isFavorite(product.id)">❤️</span>
+          <span v-else>🤍</span>
+        </button>
+      </div>
 
-      <q-card-section>
-        <div class="text-h5">{{ product.name }}</div>
-        <div class="text-subtitle2 text-grey-7 q-mt-xs">{{ product.category }}</div>
-        <div class="q-mt-md">{{ product.shortDescription }}</div>
-      </q-card-section>
+      <!-- Info -->
+      <div class="mt-4">
+        <h2 class="text-xl font-semibold">{{ product.name }}</h2>
+        <p class="text-sm text-gray-600 mt-1">{{ product.category }}</p>
+        <p class="mt-3 text-gray-800">{{ product.shortDescription }}</p>
+      </div>
 
-      <q-card-actions align="right">
-        <q-btn
-          flat
-          label="Volver a productos"
-          color="primary"
+      <!-- Botón volver -->
+      <div class="flex justify-end mt-6">
+        <button
+          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
           @click="$router.push('/productos')"
-        />
-      </q-card-actions>
-    </q-card>
+        >
+          Volver a productos
+        </button>
+      </div>
+    </div>
 
-    <div v-else class="text-center q-pa-lg">
-      <q-spinner color="primary" size="2em" />
-      <div class="q-mt-md">Cargando producto...</div>
+    <!-- Loading -->
+    <div v-else class="text-center py-10">
+      <div class="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+      <p class="mt-4 text-gray-600">Cargando producto...</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { mockedProducts } from 'src/modules/main-page/interfaces/ProductModel'
 import { ref, computed, onMounted } from 'vue'
-import { useMeta } from 'quasar'
+import { mockedProducts } from '../../../main-page/interfaces/ProductModel'
 
 const route = useRoute()
 const router = useRouter()
@@ -69,16 +75,18 @@ onMounted(() => {
   }
 })
 
-useMeta(() => {
-  if (!product.value) return {}
-  return {
-    title: `${product.value.name} | Mi Tienda de Muebles`,
-    meta: {
-      description: { name: 'description', content: product.value.shortDescription },
-      ogTitle: { property: 'og:title', content: product.value.name },
-      ogDescription: { property: 'og:description', content: product.value.shortDescription },
-      ogImage: { property: 'og:image', content: product.value.image },
-    },
+// SEO sin Quasar (usa vue-meta o @vueuse/head si quieres SSR)
+onMounted(() => {
+  if (product.value) {
+    useHead({
+      title: `${product.value.name} | Mi Tienda de Muebles`,
+      meta: [
+        { name: 'description', content: product.value.shortDescription },
+        { property: 'og:title', content: product.value.name },
+        { property: 'og:description', content: product.value.shortDescription },
+        { property: 'og:image', content: product.value.image },
+      ],
+    })
   }
 })
 
@@ -106,5 +114,10 @@ function toggleFavorite(id: number) {
 
 function isFavorite(id: number) {
   return favorites.value.includes(id)
+}
+
+
+function useHead(arg0: { title: string; meta: ({ name: string; content: any } | { property: string; content: any })[] }) {
+  throw new Error('Function not implemented.')
 }
 </script>

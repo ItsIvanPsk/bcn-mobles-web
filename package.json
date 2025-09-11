@@ -1,43 +1,26 @@
 {
-  "name": "bcn-mobles",
-  "version": "0.0.1",
+  "name": "Neriva Labs",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "quasar ssg generate",
-    "build:ssg": "quasar ssg generate",
-    "serve:ssg": "quasar ssg serve dist/ssg"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@intlify/unplugin-vue-i18n": "^11.0.0",
-    "@quasar/extras": "^1.17.0",
-    "axios": "^1.11.0",
-    "pinia": "^3.0.3",
-    "quasar": "^2.18.2",
-    "vue": "^3.5.0",
-    "vue-i18n": "^11.1.12",
-    "vue-router": "^4.4.0",
-    "@ugursahinkaya/ssg": "latest"
+    "@formkit/themes": "^0.16.2",
+    "@formkit/vue": "^0.16.2",
+    "axios": "^1.3.4",
+    "emailjs-com": "^3.2.0",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@quasar/app-vite": "^2.4.0",
-    "@types/axios": "^0.9.36",
-    "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "@typescript-eslint/parser": "^8.43.0",
-    "@ugursahinkaya/quasar-app-extension-ssg": "^0.1.18",
-    "@ugursahinkaya/ssg": "^2.1.34",
     "@vitejs/plugin-vue": "^6.0.1",
-    "@vue/eslint-config-prettier": "^10.2.0",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.9.0",
-    "eslint-plugin-vue": "^9.28.0",
-    "postcss": "^8.5.6",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.43.0",
-    "vite-plugin-checker": "^0.10.3",
-    "vue-tsc": "^2.1.6"
-  },
-  "engines": {
-    "node": "22.x",
-    "npm": ">=8.0.0"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "sass": "^1.83.1",
+    "tailwindcss": "^3.4.17",
+    "vite": "^7.1.5"
   }
 }

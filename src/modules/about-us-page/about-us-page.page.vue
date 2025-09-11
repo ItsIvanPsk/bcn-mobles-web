@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-import BcnHero from 'components/BcnHero.vue'
+import BcnHero from '../../components/BcnHero.vue';
 </script>

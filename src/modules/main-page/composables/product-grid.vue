@@ -1,48 +1,45 @@
 <template>
-  <div class="q-gutter-md row justify-center items-start">
-    <q-card
+  <div class="products-grid">
+    <div
       v-for="p in products"
       :key="p.id"
-      flat
-      bordered
-      class="col-12 col-sm-6 col-md-3 product-card"
+      class="product-card"
     >
       <!-- Imagen -->
-      <q-img :src="p.image" :ratio="1" loading="lazy">
-        <!-- Botón de favorito arriba a la derecha -->
-      </q-img>
-
-      <q-btn
-        class="absolute-top-right q-ma-sm"
-        flat
-        round
-        dense
-        :icon="isFavorite(p.id) ? 'favorite' : 'favorite_border'"
-        color="red"
-        @click="toggleFavorite(p.id)"
-      />
+      <div class="image-wrapper">
+        <img :src="p.image" :alt="p.name" loading="lazy" />
+        <!-- Botón de favorito -->
+        <button
+          class="favorite-btn"
+          @click="toggleFavorite(p.id)"
+        >
+          <span v-if="isFavorite(p.id)">❤️</span>
+          <span v-else>🤍</span>
+        </button>
+      </div>
 
       <!-- Info -->
-      <q-card-section>
-        <div class="text-subtitle1 ellipsis">{{ p.name }}</div>
-        <div class="text-grey-7 ellipsis">{{ p.category }}</div>
-      </q-card-section>
+      <div class="info">
+        <div class="title">{{ p.name }}</div>
+        <div class="category">{{ p.category }}</div>
+      </div>
 
       <!-- Botón ver más -->
-      <q-card-actions align="right">
-        <q-btn flat color="primary" label="Ver más" @click="viewMore(p.id)" />
-      </q-card-actions>
-    </q-card>
+      <div class="actions">
+        <button @click="goToProduct(p)">Ver más</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { mainPageMockedProduct } from '../interfaces/ProductModel'
+import { onMounted, ref } from 'vue'
 
+const router = useRouter()
 const products = mainPageMockedProduct
 
-// favoritos persistidos en localStorage
 const favorites = ref<number[]>([])
 
 onMounted(() => {
@@ -68,14 +65,115 @@ function toggleFavorite(id: number) {
 function isFavorite(id: number) {
   return favorites.value.includes(id)
 }
+function slugify(text: string) {
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
 
-function viewMore(id: number) {
-  console.log(id)
+function goToProduct(p: { id: number; name: string }) {
+  const slug = slugify(p.name)
+  router.push(`/productos/${p.id}-${slug}`)
 }
 </script>
 
 <style scoped lang="scss">
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
 .product-card {
   position: relative;
+  width: 100%;
+  max-width: 280px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.image-wrapper {
+  position: relative;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.info {
+  padding: 0.75rem 1rem;
+
+  .title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .category {
+    font-size: 0.875rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 1rem 1rem;
+
+  button {
+    background: #c34b16;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #ff9264;
+    }
+  }
 }
 </style>

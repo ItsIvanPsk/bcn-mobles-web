@@ -1,4 +1,5 @@
-$color-primary: #c34b16; // naranja base (logo)
+// theme.scss
+$color-primary: #c34b16;
 $color-primary-2: #c44c17;
 $color-primary-3: #c54d18;
 $color-primary-4: #c24a15;
@@ -12,5 +13,18 @@ $color-medium-gray: #8f8f8f;
 $color-dark-gray: #585858;
 
 :root {
-  --hero-bg: #c34b16;
+  --color-primary: #c34b16;
+  --color-primary-2: #c44c17;
+  --color-primary-3: #c54d18;
+  --color-primary-4: #c24a15;
+  --color-primary-5: #c64e19;
+
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  --color-light-gray: #d3d3d3;
+  --color-medium-gray: #8f8f8f;
+  --color-dark-gray: #585858;
+
+  --hero-bg: var(--color-primary);
 }

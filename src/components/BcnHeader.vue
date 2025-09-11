@@ -1,67 +1,113 @@
 <template>
-  <div class="row items-center justify-between q-px-md q-py-sm wrap site-header">
+  <header class="flex items-center justify-between px-4 py-2 bg-white border-b border-lightgray min-h-[60px]">
     <!-- Logo -->
-    <div class="col-grow row">
+    <div class="flex-shrink-0">
       <a href="/">
-        <img src="" alt="BcnMobles Logo" />
+        <img src="/public/logo.jpg" alt="BcnMobles Logo" class="h-10" />
       </a>
     </div>
 
-    <!-- Search -->
-    <div class="col-grow col-3 q-px-md row justify-end search-wrapper">
-      <transition name="fade">
-        <q-input
-          v-if="searchOpen"
-          v-model="q"
-          dense
-          rounded
-          outlined
-          debounce="300"
-          placeholder="¿Qué estás buscando?"
-          class="search-input"
-          @blur="onBlur"
+    <!-- User, favorites & search -->
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 pe-3">
+        <button
+          class="flex items-center justify-center pe-3"
+          aria-label="Mesas"
+          @click="router.push({ path: '/productos', query: { category: 'Mesas' } })"
         >
-          <template #append>
-            <q-icon name="close" class="cursor-pointer" @click="closeSearch" />
-          </template>
-        </q-input>
-      </transition>
+          <span class="text-darkgray">Mesas</span>
+        </button>
 
-      <q-btn v-if="!searchOpen" flat round icon="search" @click="searchOpen = true" />
-
-      <!-- Dropdown filtrado con scroll infinito -->
-      <div v-if="q && paginatedProducts.length" class="results-dropdown" @scroll="handleScroll">
-        <div
-          v-for="p in paginatedProducts"
-          :key="p.id"
-          class="result-item"
-          @mousedown.prevent="goToProduct(p)"
+        <button
+          class="flex items-center justify-center pe-3"
+          aria-label="Armarios"
+          @click="router.push({ path: '/productos', query: { category: 'Armarios' } })"
         >
-          <div class="img-wrapper">
-            <img :src="p.image" alt="product" class="result-img" />
-          </div>
-          <div class="q-ml-sm text-wrapper">
-            <div class="result-name">{{ p.name }}</div>
-            <div class="result-desc">{{ p.shortDescription }}</div>
-          </div>
-        </div>
-        <div v-if="loading" class="loading">Cargando más...</div>
-        <div v-if="finished" class="end">No hay más resultados</div>
+          <span class="text-darkgray">Armarios</span>
+        </button>
       </div>
-    </div>
 
-    <!-- User & favorites -->
-    <div class="row items-center">
-      <q-btn flat round icon="favorite_border" />
-      <q-btn flat round icon="person_outline" />
+      <!-- Search -->
+      <div class="relative flex items-center">
+        <transition name="fade">
+          <div
+            v-if="searchOpen"
+            class="flex items-center bg-white border border-lightgray rounded-full px-3 shadow-sm"
+          >
+            <input
+              v-model="q"
+              type="text"
+              placeholder="¿Qué estás buscando?"
+              class="w-52 py-1 px-2 text-sm text-darkgray focus:outline-none"
+              @blur="onBlur"
+            />
+            <button
+              type="button"
+              class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100"
+              @click="closeSearch"
+              aria-label="Cerrar"
+            >
+              <span class="material-symbols-outlined text-darkgray">close</span>
+            </button>
+          </div>
+        </transition>
+
+        <button
+          v-if="!searchOpen"
+          class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
+          @click="searchOpen = true"
+          aria-label="Buscar"
+        >
+          <span class="material-symbols-outlined text-darkgray">search</span>
+        </button>
+
+        <!-- Dropdown -->
+        <div
+          v-if="q && paginatedProducts.length"
+          class="absolute top-full right-0 mt-2 w-72 max-h-72 overflow-y-auto bg-white border border-lightgray rounded-lg shadow-lg z-50"
+          @scroll="handleScroll"
+        >
+          <div
+            v-for="p in paginatedProducts"
+            :key="p.id"
+            class="flex items-center p-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
+            @mousedown.prevent="goToProduct(p)"
+          >
+            <img :src="p.image" alt="product" class="w-14 h-10 object-cover rounded mr-2" />
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-semibold truncate">{{ p.name }}</div>
+              <div class="text-xs text-mediumgray truncate">{{ p.shortDescription }}</div>
+            </div>
+          </div>
+          <div v-if="loading" class="text-center py-2 text-xs text-mediumgray">Cargando más...</div>
+          <div v-if="finished" class="text-center py-2 text-xs text-mediumgray">No hay más resultados</div>
+        </div>
+      </div>
+
+      <!-- Favorites -->
+      <button
+        class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
+        aria-label="Favoritos"
+      >
+        <span class="material-symbols-outlined text-darkgray">favorite</span>
+      </button>
+
+      <!-- Cuenta -->
+      <button
+        class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
+        aria-label="Cuenta"
+      >
+        <span class="material-symbols-outlined text-darkgray">person</span>
+      </button>
     </div>
-  </div>
+  </header>
 </template>
 
+
 <script setup lang="ts">
-import { mockedProducts } from 'src/modules/main-page/interfaces/ProductModel'
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { mockedProducts } from '../modules/main-page/interfaces/ProductModel'
 
 const q = ref('')
 const searchOpen = ref(false)
@@ -144,105 +190,7 @@ function slugify(text: string) {
 
 function goToProduct(p: { id: number; name: string }) {
   const slug = slugify(p.name)
-  console.log('Navigating to product', p.id, slug)
   closeSearch()
   router.push(`/productos/${p.id}-${slug}`)
 }
 </script>
-
-<style scoped lang="scss">
-.site-header {
-  position: relative;
-  z-index: 10;
-}
-
-.search-wrapper {
-  position: relative;
-}
-
-.results-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 320px;
-  max-height: 300px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-}
-
-.result-item {
-  display: flex;
-  align-items: stretch;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-
-  &:hover {
-    background: #f5f5f5;
-  }
-}
-
-.img-wrapper {
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-}
-
-.result-img {
-  height: 100%;
-  width: 60px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.text-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-}
-
-.result-name {
-  font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.result-desc {
-  font-size: 12px;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.loading,
-.end {
-  text-align: center;
-  padding: 8px;
-  font-size: 12px;
-  color: #666;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition:
-    opacity 0.3s,
-    transform 0.3s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: scaleX(0.5);
-}
-.search-input {
-  width: 250px;
-  max-width: 100%;
-}
-</style>

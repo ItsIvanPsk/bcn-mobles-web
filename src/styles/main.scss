@@ -1,0 +1,33 @@
+$primary-color: #333;
+$secondary-color: #f4f4f4;
+$text-color: white;
+$padding-small: 0.5rem;
+$padding-medium: 1rem;
+$padding-large: 2rem;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, p, a, li, ul, ol, em, small, i, b {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.header-item {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+
+.footer-item {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
