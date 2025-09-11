@@ -3,7 +3,7 @@
     <!-- Logo -->
     <div class="col-grow row">
       <a href="/">
-        <img src="../../public/icons/favicon-128x128.png" alt="BcnMobles Logo" />
+        <img src="" alt="BcnMobles Logo" />
       </a>
     </div>
 
