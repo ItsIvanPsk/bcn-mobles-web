@@ -1,8 +1,4 @@
 {
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.js"
-    }
-  ]
+  "builds": [{ "src": "package.json", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": ".output/ssr/index.js" }]
 }
