@@ -1,4 +1,13 @@
 {
-  "builds": [{ "src": "dist/ssr/**/*", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "dist/ssr/index.js" }]
+  "functions": {
+    "api/index.js": {
+      "runtime": "@vercel/node@3"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.js"
+    }
+  ]
 }

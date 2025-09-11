@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "quasar dev",
-    "build": "quasar build",
+    "build": "quasar build -m ssr",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "type-check": "vue-tsc --noEmit"
   },
