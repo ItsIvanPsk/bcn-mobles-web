@@ -1,7 +1,20 @@
-try {
-  const quasarServer = require('../dist/ssr/index.js')
-  module.exports = quasarServer.default || quasarServer
-} catch (err) {
-  console.error('SSR server not found, did you run `quasar build -m ssr`?', err)
-  throw err
+import * as quasarServer from '../dist/ssr/index.js'
+
+export default async function handler(req, res) {
+  try {
+    // Quasar expone `render` en su objeto
+    const result = await quasarServer.render({
+      url: req.url,
+      req,
+      res,
+    })
+
+    res.statusCode = result.statusCode || 200
+    res.setHeader('Content-Type', 'text/html')
+    res.end(result.html)
+  } catch (err) {
+    console.error(err)
+    res.statusCode = 500
+    res.end('Internal Server Error')
+  }
 }

@@ -65,6 +65,12 @@ export default [
       'prefer-promise-reject-errors': 'off',
       '@typescript-eslint/consistent-type-imports': 'warn',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
     },
   },
 
