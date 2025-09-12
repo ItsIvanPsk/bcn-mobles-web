@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { mockedProducts } from '../../../main-page/interfaces/ProductModel'
 import BcnDiscountHero from '../../../../components/BcnDiscountHero.vue'
@@ -135,7 +135,7 @@ const filters = reactive({
 
 const localFilters = reactive({ ...filters })
 
-const categories = ['Mesa', 'Armarios', 'Sillas', 'Sofás']
+const categories = ['Mesas', 'Armarios', 'Sillas', 'Sofás']
 const sizes = ['Pequeño', 'Mediano', 'Grande']
 const colors = ['Rojo', 'Azul', 'Negro']
 
@@ -237,6 +237,38 @@ function goToDetail(product: any) {
     query: { id: product.id }
   })
 }
+
+onMounted(() => {
+  allProducts.value = Array.isArray(mockedProducts) ? mockedProducts : mockedProducts.value
+
+  syncFiltersWithQuery()
+  resetAndFetch()
+})
+
+function syncFiltersWithQuery() {
+  if (route.query.name) filters.name = String(route.query.name)
+  else filters.name = ''
+
+  if (route.query.category) filters.category = String(route.query.category)
+  else filters.category = ''
+
+  if (route.query.size) filters.size = String(route.query.size)
+  else filters.size = ''
+
+  if (route.query.color) filters.color = String(route.query.color)
+  else filters.color = ''
+
+  Object.assign(localFilters, filters)
+}
+
+watch(
+  () => route.query,
+  () => {
+    syncFiltersWithQuery()
+    resetAndFetch()
+  },
+  { deep: true }
+)
 </script>
 
 <style scoped>

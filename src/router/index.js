@@ -7,6 +7,7 @@ import CallendlyPage from '../modules/callendly/pages/callendly.page.vue'
 import LegalAdvice from '../pages/LegalAdvice.vue'
 import Cookies from '../pages/Cookies.vue'
 import PrivacyPolice from '../pages/PrivacyPolice.vue'
+import FavoritesListPage from '../modules/favorites/favorites-list.page.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +31,11 @@ const router = createRouter({
       path: '/productos/:id-:slug',
       name: 'product-detail',
       component: ProductDetail
+    },
+    {
+      path: '/productos-favoritos',
+      name: 'productos-favoritor',
+      component: FavoritesListPage
     },
     {
       path: '/pedir-cita',

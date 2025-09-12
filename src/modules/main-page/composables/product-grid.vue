@@ -5,10 +5,8 @@
       :key="p.id"
       class="product-card"
     >
-      <!-- Imagen -->
       <div class="image-wrapper">
-        <img :src="p.image" :alt="p.name" loading="lazy" />
-        <!-- Botón de favorito -->
+        <img :src="p.mainImage" :alt="p.name" loading="lazy" />
         <button
           class="favorite-btn"
           @click="toggleFavorite(p.id)"
@@ -18,13 +16,11 @@
         </button>
       </div>
 
-      <!-- Info -->
       <div class="info">
         <div class="title">{{ p.name }}</div>
         <div class="category">{{ p.category }}</div>
       </div>
 
-      <!-- Botón ver más -->
       <div class="actions">
         <button @click="goToProduct(p)">Ver más</button>
       </div>

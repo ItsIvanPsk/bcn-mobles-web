@@ -12,18 +12,18 @@
       <div class="flex items-center gap-2 pe-3">
         <button
           class="flex items-center justify-center pe-3"
-          aria-label="Mesas"
-          @click="router.push({ path: '/productos', query: { category: 'Mesas' } })"
+          aria-label="Sillas"
+          @click="router.push({ path: '/productos', query: { category: 'Sillas' } })"
         >
-          <span class="text-darkgray">Mesas</span>
+          <span class="text-darkgray">Sillas</span>
         </button>
 
         <button
           class="flex items-center justify-center pe-3"
-          aria-label="Armarios"
-          @click="router.push({ path: '/productos', query: { category: 'Armarios' } })"
+          aria-label="Mesas"
+          @click="router.push({ path: '/productos', query: { category: 'Mesas' } })"
         >
-          <span class="text-darkgray">Armarios</span>
+          <span class="text-darkgray">Mesas</span>
         </button>
       </div>
 
@@ -73,7 +73,7 @@
             class="flex items-center p-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
             @mousedown.prevent="goToProduct(p)"
           >
-            <img :src="p.image" alt="product" class="w-14 h-10 object-cover rounded mr-2" />
+            <img :src="p.mainImage" alt="product" class="w-14 h-10 object-cover rounded mr-2" />
             <div class="flex-1 min-w-0">
               <div class="text-sm font-semibold truncate">{{ p.name }}</div>
               <div class="text-xs text-mediumgray truncate">{{ p.shortDescription }}</div>
@@ -88,16 +88,9 @@
       <button
         class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
         aria-label="Favoritos"
+        @click="router.push('/productos-favoritos')"
       >
         <span class="material-symbols-outlined text-darkgray">favorite</span>
-      </button>
-
-      <!-- Cuenta -->
-      <button
-        class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
-        aria-label="Cuenta"
-      >
-        <span class="material-symbols-outlined text-darkgray">person</span>
       </button>
     </div>
   </header>
