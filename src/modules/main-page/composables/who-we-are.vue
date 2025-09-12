@@ -9,7 +9,7 @@
           />
         </div>
 
-        <div>
+        <div class="p-10">
           <h3 class="text-2xl font-bold mb-4 text-black">¿Por qué elegirnos?</h3>
           <p class="mb-3 text-base text-black">
             Somos una empresa comprometida con la <strong>calidad</strong> y la

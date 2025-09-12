@@ -3,8 +3,8 @@
     <div class="footer-left">© 2025 BCN Mobles</div>
     <div class="footer-links">
       <button @click="goTo('aviso-legal')">Aviso legal</button>
-      <button @click="goTo('privacidad')">Privacidad</button>
-      <button @click="goTo('cookies')">Cookies</button>
+      <button @click="goTo('politica-de-privacidad')">Privacidad</button>
+      <button @click="goTo('acuerdo-de-cookies')">Cookies</button>
     </div>
   </footer>
 </template>
