@@ -7,7 +7,7 @@
           title: 'Presupuestos a medida',
           cta: 'Leer más',
           ctaClass: 'bg-[#c34b16] hover:bg-[#c44c17] text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300',
-          action: () => router.push('/productos'),
+          action: () => router.push('/pedir-cita'),
           wrapperClass: 'text-center max-w-lg mx-auto',
         },
         {
