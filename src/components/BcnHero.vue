@@ -28,26 +28,28 @@
           <button
             v-if="slide.cta"
             @click="slide.action && slide.action()"
-            :class="slide.ctaClass ?? 'bg-primary text-white px-4 py-2 rounded hover:bg-primary-2 transition'"
+            :class="slide.ctaClass ?? 'bg-primary text-white px-4 py-2 rounded hover:bg-primary-2 transition' "
           >
             {{ slide.cta }}
           </button>
-          <!-- Contenido totalmente custom si se define -->
           <component v-if="slide.customContent" :is="slide.customContent" />
         </div>
       </div>
     </div>
 
     <!-- Controls -->
-    <div v-if="slides.length > 1" class="absolute inset-0 flex items-center justify-between px-4">
+    <div
+      v-if="slides.length > 1"
+      class="absolute inset-0 flex items-center justify-between px-4 z-20"
+    >
       <button
-        class="bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60"
+        class="bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
         @click="prevSlide"
       >
         <span class="material-symbols-outlined">chevron_left</span>
       </button>
       <button
-        class="bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60"
+        class="bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
         @click="nextSlide"
       >
         <span class="material-symbols-outlined">chevron_right</span>
@@ -55,7 +57,10 @@
     </div>
 
     <!-- Dots -->
-    <div v-if="slides.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+    <div
+      v-if="slides.length > 1"
+      class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20"
+    >
       <button
         v-for="(slide, i) in slides"
         :key="i"

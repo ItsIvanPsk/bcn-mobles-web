@@ -30,11 +30,11 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { mainPageMockedProduct } from '../interfaces/ProductModel'
+import { mockedProducts } from '../interfaces/ProductModel'
 import { onMounted, ref } from 'vue'
 
 const router = useRouter()
-const products = mainPageMockedProduct
+const products = mockedProducts
 
 const favorites = ref<number[]>([])
 

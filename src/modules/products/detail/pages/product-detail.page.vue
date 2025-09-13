@@ -1,7 +1,6 @@
 <template>
   <section class="min-h-screen bg-gray-50 py-12 px-6">
     <div v-if="product" class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12">
-      
       <!-- Columna principal (galería + info) -->
       <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-8">
         <!-- Galería -->
@@ -51,25 +50,110 @@
           <h2 class="text-xl font-semibold mb-4">Detalles del producto</h2>
           <p class="text-gray-700 mb-4">{{ product.description }}</p>
           <ul class="space-y-2 text-gray-700">
-            <li><strong>Tamaño:</strong> {{ product.size }}</li>
-            <li><strong>Color:</strong> {{ product.color }}</li>
+            <li><strong>Tamaño:</strong> {{ product.defaultSize }}</li>
+            <li><strong>Color:</strong> {{ product.defaultColor }}</li>
             <li><strong>Marca:</strong> {{ product.brand }}</li>
           </ul>
         </div>
       </div>
 
-      <div class="flex flex-col gap-3">
-        <RelatedProducts
-          :products="relatedProducts"
-          @goToDetail="goToDetail"
-        />
+      <div class="flex flex-col gap-6">
+        <!-- Panel de aviso (separado arriba) -->
+        <div class="bg-blue-50 border border-blue-200 rounded-md p-4 flex items-start gap-3">
+          <span class="material-symbols-outlined text-blue-500 mt-0.5">help</span>
+          <div class="flex-1">
+            <p class="text-sm text-blue-700 mb-2">
+              Para poder comprarlo, pide una cita en tienda para finalizar la compra.
+            </p>
+            <button
+              class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition"
+              @click="goToBooking"
+            >
+              Solicitar cita
+            </button>
+          </div>
+        </div>
 
-        <RelatedCategories
-          class="mt-3"
-          :product="product"
-          @goToCategory="(cat: any) => $router.push({ path: '/productos', query: { category: cat } })"
-        />
+
+        <!-- Panel de personalización -->
+        <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col gap-6">
+          <h2 class="text-xl font-semibold">Personaliza tu mueble</h2>
+
+          <!-- Tamaño -->
+          <div v-if="product.sizes?.length">
+            <label class="block text-sm font-medium mb-2">Tamaño</label>
+            <select v-model="selected.size" class="w-full border rounded p-2">
+              <option v-for="size in product.sizes" :key="size" :value="size">
+                {{ size }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Colores -->
+          <div v-if="product.colors?.length">
+            <label class="block text-sm font-medium mb-2">Colores</label>
+            <div class="flex gap-3 flex-wrap">
+              <button
+                v-for="colorObj in product.colors"
+                :key="colorObj.name"
+                @click="selected.color = colorObj.name"
+                class="w-10 h-10 rounded-full border-2 transition relative"
+                :class="selected.color === colorObj.name ? 'border-black scale-110' : 'border-gray-300'"
+                :style="colorObj.texture 
+                  ? { backgroundImage: `url(${colorObj.texture})`, backgroundSize: 'cover' } 
+                  : { backgroundColor: colorObj.color ?? '#ccc' }"
+                :title="colorObj.name"
+              ></button>
+            </div>
+          </div>
+
+          <!-- Tipo -->
+          <div v-if="product.types?.length">
+            <label class="block text-sm font-medium mb-2">Tipo</label>
+            <select v-model="selected.type" class="w-full border rounded p-2">
+              <option v-for="type in product.types" :key="type" :value="type">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Medidas -->
+          <div v-if="product.measures?.length">
+            <label class="block text-sm font-medium mb-2">Medidas</label>
+            <select v-model="selected.measure" class="w-full border rounded p-2">
+              <option v-for="m in product.measures" :key="m" :value="m">{{ m }}</option>
+            </select>
+          </div>
+
+          <!-- Extensible -->
+          <div v-if="product.extensible !== undefined">
+            <label class="inline-flex items-center">
+              <input type="checkbox" v-model="selected.extensible" class="mr-2" />
+              Mesa extensible
+            </label>
+          </div>
+
+          <button
+            class="bg-[#c34b16] text-white py-2 px-4 rounded hover:bg-[#a03d13] transition"
+            @click="addToCart"
+          >
+            Añadir al carrito
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- Related (debajo del contenedor principal) -->
+    <div v-if="product" class="max-w-7xl mx-auto mt-12">
+      <RelatedProducts
+        :products="relatedProducts"
+        @goToDetail="goToDetail"
+      />
+      <RelatedCategories
+        class="mt-6"
+        :product="product"
+        @goToCategory="(cat: any) => $router.push({ path: '/productos', query: { category: cat } })"
+      />
     </div>
 
     <!-- Loading -->
@@ -106,6 +190,14 @@ function toSlug(name: string) {
 const product = ref<any>(mockedProducts.value.find((p) => p.id === productId))
 const activeImage = ref<string>('')
 
+const selected = ref({
+  size: '',
+  color: '',
+  type: '',
+  measure: '',
+  extensible: false,
+})
+
 onMounted(() => {
   if (product.value) {
     const expectedSlug = toSlug(product.value.name)
@@ -113,25 +205,40 @@ onMounted(() => {
       router.replace(`/productos/${product.value.id}-${expectedSlug}`)
     }
     activeImage.value = product.value.mainImage
+
+    selected.value = {
+      size: product.value.sizes?.[0] ?? '',
+      color: product.value.colors?.[0]?.name ?? '',
+      type: product.value.types?.[0] ?? '',
+      measure: product.value.measures?.[0] ?? '',
+      extensible: product.value.extensible ?? false,
+    }
   }
 })
 
 watch(
   () => route.params.id,
   (newId) => {
-    const [rawId, rawSlug] = (newId as string).split("-")
-    const productId = parseInt(rawId ?? "", 10)
+    const [rawId, rawSlug] = (newId as string).split('-')
+    const productId = parseInt(rawId ?? '', 10)
     const newProduct = mockedProducts.value.find((p) => p.id === productId)
     if (newProduct) {
       product.value = newProduct
       activeImage.value = newProduct.mainImage
+
+      selected.value = {
+        size: newProduct.sizes?.[0] ?? '',
+        color: newProduct.colors?.[0]?.name ?? '',
+        type: newProduct.types?.[0] ?? '',
+        measure: newProduct.measures?.[0] ?? '',
+        extensible: newProduct.extensible ?? false,
+      }
     }
   }
 )
 
 const relatedProducts = computed(() => {
   if (!product.value) return []
-  console.log('Related products for category:', product.value.category)
   return mockedProducts.value
     .filter(
       (p) => p.category === product.value?.category && p.id !== product.value.id
@@ -152,6 +259,16 @@ onMounted(() => {
   const stored = localStorage.getItem('favorites')
   if (stored) favorites.value = JSON.parse(stored)
 })
+
+function goToBooking() {
+  if (!product.value) return
+  router.push({
+    path: '/pedir-cita',
+    query: {
+      description: `Producto: ${product.value.name}`
+    },
+  })
+}
 
 function saveFavorites() {
   localStorage.setItem('favorites', JSON.stringify(favorites.value))
@@ -180,5 +297,16 @@ function formatPrice(price: number) {
 function goToDetail(product: any) {
   const slug = toSlug(product.name)
   router.push(`/productos/${product.id}-${slug}`)
+}
+
+function addToCart() {
+  alert(
+    `Añadido al carrito: ${product.value.name}
+Tamaño: ${selected.value.size}
+Color: ${selected.value.color}
+Tipo: ${selected.value.type}
+Medida: ${selected.value.measure}
+Extensible: ${selected.value.extensible ? 'Sí' : 'No'}`
+  )
 }
 </script>

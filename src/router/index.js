@@ -3,20 +3,16 @@ import MainPage from '../modules/main-page/main-page.page.vue'
 import PageNotFound from '../pages/ErrorNotFound.vue'
 import ProductList from '../modules/products/list/pages/product-list.page.vue'
 import ProductDetail from '../modules/products/detail/pages/product-detail.page.vue'
-import CallendlyPage from '../modules/callendly/pages/callendly.page.vue'
+import CallendlyPage from '../modules/callendly/callendly.page.vue'
 import LegalAdvice from '../pages/LegalAdvice.vue'
 import Cookies from '../pages/Cookies.vue'
 import PrivacyPolice from '../pages/PrivacyPolice.vue'
 import FavoritesListPage from '../modules/favorites/favorites-list.page.vue'
+import FAQs from '../pages/FAQs.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { 
-      path: '/:pathMatch(.*)*', 
-      name: 'not-found', 
-      component: PageNotFound 
-    }, 
     {
       path: '/',
       name: 'main-page',
@@ -25,39 +21,49 @@ const router = createRouter({
     {
       path: '/productos',
       name: 'product-list',
-      component: ProductList
+      component: ProductList,
     },
     {
       path: '/productos/:id-:slug',
       name: 'product-detail',
-      component: ProductDetail
+      component: ProductDetail,
     },
     {
       path: '/productos-favoritos',
-      name: 'productos-favoritor',
-      component: FavoritesListPage
+      name: 'productos-favoritos',
+      component: FavoritesListPage,
     },
     {
       path: '/pedir-cita',
       name: 'reservations',
-      component: CallendlyPage
+      component: CallendlyPage,
     },
     {
       path: '/aviso-legal',
       name: 'legal-advice',
-      component: LegalAdvice
+      component: LegalAdvice,
     },
     {
       path: '/politica-de-privacidad',
-      name: 'privacity',
-      component: PrivacyPolice
+      name: 'privacy',
+      component: PrivacyPolice,
     },
     {
       path: '/acuerdo-de-cookies',
       name: 'cookies',
-      component: Cookies
-    }
-  ]
+      component: Cookies,
+    },
+    {
+      path: '/preguntas-frecuentes',
+      name: 'faq',
+      component: FAQs,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: PageNotFound,
+    },
+  ],
 })
 
 export default router
