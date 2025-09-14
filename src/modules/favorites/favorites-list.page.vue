@@ -19,16 +19,26 @@
       >
         <div class="relative w-full aspect-[4/3] bg-gray-100">
           <img
-            :src="product.mainImage || product.image"
-            :alt="product.name" 
+            :src="product.mainImage?.src"
+            :alt="product.mainImage?.alt || product.name"
             class="w-full h-full object-cover transition-transform duration-300"
           />
         </div>
         <div class="p-4">
           <h3 class="text-base md:text-lg font-semibold mb-1">{{ product.name }}</h3>
-          <p class="text-sm text-gray-600">Categoría: {{ product.category }}</p>
-          <p class="text-sm text-gray-600">Tamaño: {{ product.size }}</p>
-          <p class="text-sm text-gray-600">Color: {{ product.color }}</p>
+          <p class="text-sm text-gray-600">
+            Categorías: 
+            <span v-if="product.categories?.length">
+              {{ product.categories.map(c => c.name).join(', ') }}
+            </span>
+            <span v-else>Sin categoría</span>
+          </p>
+          <p v-if="product.sizes?.length" class="text-sm text-gray-600">
+            Tamaños: {{ product.sizes.join(', ') }}
+          </p>
+          <p v-if="product.colors?.length" class="text-sm text-gray-600">
+            Colores: {{ product.colors.map(c => c.name).join(', ') }}
+          </p>
         </div>
       </div>
     </div>
@@ -75,7 +85,7 @@
           />
           <select v-model="localFilters.category" class="border p-4 rounded w-full">
             <option value="">Categoría</option>
-            <option v-for="c in categories" :key="c" :value="c">{{ c }}</option>
+            <option v-for="c in categories" :key="c.id" :value="c.name">{{ c.name }}</option>
           </select>
           <select v-model="localFilters.size" class="border p-4 rounded w-full">
             <option value="">Tamaño</option>
@@ -112,7 +122,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { mockedProducts } from '../main-page/interfaces/ProductModel'
 
-
 const route = useRoute()
 const router = useRouter()
 
@@ -133,7 +142,12 @@ const filters = reactive({
 
 const localFilters = reactive({ ...filters })
 
-const categories = ['Mesa', 'Armarios', 'Sillas', 'Sofás']
+const categories = [
+  { id: 1, name: 'Mesas' },
+  { id: 2, name: 'Armarios' },
+  { id: 3, name: 'Sillas' },
+  { id: 4, name: 'Sofás' },
+]
 const sizes = ['Pequeño', 'Mediano', 'Grande']
 const colors = ['Rojo', 'Azul', 'Negro']
 
@@ -158,13 +172,17 @@ async function fetchProducts(reset = false) {
     )
   }
   if (filters.category) {
-    filtered = filtered.filter((p) => p.category === filters.category)
+    filtered = filtered.filter((p) =>
+      p.categories?.some(c => c.name === filters.category)
+    )
   }
   if (filters.size) {
-    filtered = filtered.filter((p) => p.size === filters.size)
+    filtered = filtered.filter((p) => p.sizes?.includes(filters.size))
   }
   if (filters.color) {
-    filtered = filtered.filter((p) => p.color === filters.color)
+    filtered = filtered.filter((p) =>
+      p.colors?.some(c => c.name === filters.color)
+    )
   }
 
   const start = (page.value - 1) * perPage

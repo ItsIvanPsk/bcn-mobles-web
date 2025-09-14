@@ -5,22 +5,33 @@
       :key="p.id"
       class="product-card"
     >
+      <!-- Imagen -->
       <div class="image-wrapper">
-        <img :src="p.mainImage" :alt="p.name" loading="lazy" />
+        <img
+          :src="p.mainImage?.src"
+          :alt="p.mainImage?.alt || p.name"
+          loading="lazy"
+        />
         <button
           class="favorite-btn"
-          @click="toggleFavorite(p.id)"
+          @click.stop="toggleFavorite(p.id)"
         >
           <span v-if="isFavorite(p.id)">❤️</span>
           <span v-else>🤍</span>
         </button>
       </div>
 
+      <!-- Info -->
       <div class="info">
         <div class="title">{{ p.name }}</div>
-        <div class="category">{{ p.category }}</div>
+        <div class="category">
+          {{ Array.isArray(p.categories) && p.categories.length > 0
+            ? p.categories.map(c => c.name).join(', ')
+            : 'Sin categoría' }}
+        </div>
       </div>
 
+      <!-- CTA -->
       <div class="actions">
         <button @click="goToProduct(p)">Ver más</button>
       </div>
@@ -61,6 +72,7 @@ function toggleFavorite(id: number) {
 function isFavorite(id: number) {
   return favorites.value.includes(id)
 }
+
 function slugify(text: string) {
   return text
     .toString()

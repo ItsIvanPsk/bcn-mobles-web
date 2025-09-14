@@ -61,7 +61,6 @@ const form = ref({
 function submitForm() {
   console.log('Formulario enviado:', form.value)
 
-  // TODO: enviar formulario al backend
   form.value = {
     name: '',
     email: '',

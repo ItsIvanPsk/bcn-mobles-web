@@ -5,8 +5,12 @@
       v-for="(slide, index) in slides"
       :key="index"
       class="absolute inset-0 transition-opacity duration-700"
-      :class="{ 'opacity-100 z-10': currentIndex === index, 'opacity-0 z-0': currentIndex !== index }"
+      :class="{
+        'opacity-100 z-10 pointer-events-auto': currentIndex === index,
+        'opacity-0 z-0 pointer-events-none': currentIndex !== index
+      }"
     >
+      <!-- Imagen -->
       <img
         :src="slide.image"
         alt="hero"
@@ -15,7 +19,7 @@
 
       <!-- Overlay + content -->
       <div
-        class="absolute inset-0 flex flex-col justify-center items-start px-8"
+        class="absolute inset-0 flex flex-col justify-center items-start px-8 z-20"
         :class="slide.overlayClass ?? 'bg-black/40 text-white'"
       >
         <div :class="slide.wrapperClass">
@@ -25,46 +29,50 @@
           <p v-if="slide.subtitle" :class="slide.subtitleClass ?? 'text-lg mb-4'">
             {{ slide.subtitle }}
           </p>
+
+          <!-- CTA -->
           <button
             v-if="slide.cta"
-            @click="slide.action && slide.action()"
-            :class="slide.ctaClass ?? 'bg-primary text-white px-4 py-2 rounded hover:bg-primary-2 transition' "
+            @click.stop="slide.action && slide.action()"
+            class="pointer-events-auto relative z-40"
+            :class="slide.ctaClass ?? 'bg-primary text-white px-4 py-2 rounded hover:bg-primary-2 transition'"
           >
             {{ slide.cta }}
           </button>
+
           <component v-if="slide.customContent" :is="slide.customContent" />
         </div>
       </div>
     </div>
 
-    <!-- Controls -->
+    <!-- Controls (no bloquean clics fuera de los botones) -->
     <div
       v-if="slides.length > 1"
-      class="absolute inset-0 flex items-center justify-between px-4 z-20"
+      class="absolute inset-0 flex items-center justify-between px-4 z-30 pointer-events-none"
     >
       <button
-        class="bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
+        class="pointer-events-auto bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
         @click="prevSlide"
       >
         <span class="material-symbols-outlined" translate="no">chevron_left</span>
       </button>
       <button
-        class="bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
+        class="pointer-events-auto bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
         @click="nextSlide"
       >
         <span class="material-symbols-outlined" translate="no">chevron_right</span>
       </button>
     </div>
 
-    <!-- Dots -->
+    <!-- Dots (no bloquean clics fuera de ellos) -->
     <div
       v-if="slides.length > 1"
-      class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20"
+      class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30 pointer-events-none"
     >
       <button
         v-for="(slide, i) in slides"
         :key="i"
-        class="w-3 h-3 rounded-full"
+        class="pointer-events-auto w-3 h-3 rounded-full"
         :class="i === currentIndex ? 'bg-white' : 'bg-gray-400/70'"
         @click="goToSlide(i)"
       ></button>

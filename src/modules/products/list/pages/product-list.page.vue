@@ -19,19 +19,27 @@
       >
         <div class="relative w-full aspect-[4/3] bg-gray-100">
           <img
-            src="/shop/hero-image.jpg"
-            :alt="product.name" 
+            :src="product.mainImage?.src"
+            :alt="product.mainImage?.alt || product.name"
             class="w-full h-full object-cover transition-transform duration-300"
           />
         </div>
         <div class="p-4">
           <h3 class="text-base md:text-lg font-semibold mb-1">{{ product.name }}</h3>
-          <p class="text-sm text-gray-600">Categoría: {{ product.category }}</p>
-          <p class="text-sm text-gray-600">Tamaño: {{ product.size }}</p>
-          <p class="text-sm text-gray-600">Color: {{ product.color }}</p>
+          <p class="text-sm text-gray-600">
+            Categorías: 
+            <span v-for="(cat, i) in product.categories" :key="cat.id">
+              {{ cat.name }}<span v-if="i < product.categories.length - 1">, </span>
+            </span>
+          </p>
+          <p v-if="product.sizes?.length" class="text-sm text-gray-600">
+            Tamaños: {{ product.sizes.join(', ') }}
+          </p>
+          <p v-if="product.colors?.length" class="text-sm text-gray-600">
+            Colores: {{ product.colors.map(c => c.name).join(', ') }}
+          </p>
         </div>
       </div>
-
     </div>
 
     <!-- Loader infinito -->
@@ -47,8 +55,6 @@
     >
       <span class="material-symbols-outlined text-2xl" translate="no">filter_alt</span>
     </button>
-
-
 
     <!-- Drawer de filtros -->
     <transition name="slide-filters">
@@ -77,7 +83,9 @@
           />
           <select v-model="localFilters.category" class="border p-4 rounded w-full">
             <option value="">Categoría</option>
-            <option v-for="c in categories" :key="c" :value="c">{{ c }}</option>
+            <option v-for="c in categories" :key="c.id" :value="c.name">
+              {{ c.name }}
+            </option>
           </select>
           <select v-model="localFilters.size" class="border p-4 rounded w-full">
             <option value="">Tamaño</option>
@@ -135,21 +143,19 @@ const filters = reactive({
 
 const localFilters = reactive({ ...filters })
 
-const categories = ['Sillas', 'Muebles', 'Armarios', 'Mesas']
-const sizes = ['Pequeño', 'Mediano', 'Grande']
+// Filtros base mock
+const categories = [
+  { id: 1, name: 'Sillas' },
+  { id: 2, name: 'Mesas' },
+  { id: 3, name: 'Armarios' },
+  { id: 4, name: 'Muebles' }
+]
+const sizes = ['Pequeño', 'Mediana', 'Grande']
 const colors = ['Roble', 'Roble claro', 'Acaccia', 'Roble oscuro', 'Negro', 'Negro mate', 'Blanco']
-const types = ['2 asientos', '3 asientos', '4 asientos', '5 asientos', '4 asientos + cheslon']
 
 onMounted(() => {
   allProducts.value = Array.isArray(mockedProducts) ? mockedProducts : mockedProducts.value
-
-  if (route.query.name) filters.name = String(route.query.name)
-  if (route.query.category) filters.category = String(route.query.category)
-  if (route.query.size) filters.size = String(route.query.size)
-  if (route.query.color) filters.color = String(route.query.color)
-
-  Object.assign(localFilters, filters)
-
+  syncFiltersWithQuery()
   resetAndFetch()
 })
 
@@ -164,16 +170,21 @@ async function fetchProducts(reset = false) {
     )
   }
   if (filters.category) {
-    filtered = filtered.filter((p) => p.category === filters.category)
+    filtered = filtered.filter((p) =>
+      p.categories?.some((c: any) => c.name === filters.category)
+    )
   }
   if (filters.size) {
-    filtered = filtered.filter((p) => p.size === filters.size)
+    filtered = filtered.filter((p) =>
+      p.sizes?.includes(filters.size)
+    )
   }
   if (filters.color) {
-    filtered = filtered.filter((p) => p.color === filters.color)
+    filtered = filtered.filter((p) =>
+      p.colors?.some((c: any) => c.name === filters.color)
+    )
   }
 
-  // aplicar paginación
   const start = (page.value - 1) * perPage
   const end = start + perPage
   const pageData = filtered.slice(start, end)
@@ -201,15 +212,13 @@ onMounted(() => {
   if (infiniteTrigger.value) observer.observe(infiniteTrigger.value)
 })
 
-// aplicar filtros (desde el drawer)
 function applyFilters() {
   Object.assign(filters, localFilters)
   router.replace({ query: { ...filters } })
   resetAndFetch()
-  showFilters.value = false // 👈 cerrar drawer tras aplicar
+  showFilters.value = false
 }
 
-// limpiar filtros
 function clearFilters() {
   Object.keys(filters).forEach((k) => (filters[k] = ''))
   Object.keys(localFilters).forEach((k) => (localFilters[k] = ''))
@@ -217,7 +226,6 @@ function clearFilters() {
   resetAndFetch()
 }
 
-// slugify para detalle
 function slugify(text: string) {
   return text
     .toString()
@@ -230,7 +238,7 @@ function slugify(text: string) {
     .replace(/^-+|-+$/g, '')
 }
 
-function goToDetail(product) {
+function goToDetail(product: any) {
   const slug = slugify(product.name)
   router.push({ 
     name: 'product-detail', 
@@ -238,25 +246,11 @@ function goToDetail(product) {
   })
 }
 
-onMounted(() => {
-  allProducts.value = Array.isArray(mockedProducts) ? mockedProducts : mockedProducts.value
-
-  syncFiltersWithQuery()
-  resetAndFetch()
-})
-
 function syncFiltersWithQuery() {
-  if (route.query.name) filters.name = String(route.query.name)
-  else filters.name = ''
-
-  if (route.query.category) filters.category = String(route.query.category)
-  else filters.category = ''
-
-  if (route.query.size) filters.size = String(route.query.size)
-  else filters.size = ''
-
-  if (route.query.color) filters.color = String(route.query.color)
-  else filters.color = ''
+  filters.name = String(route.query.name || '')
+  filters.category = String(route.query.category || '')
+  filters.size = String(route.query.size || '')
+  filters.color = String(route.query.color || '')
 
   Object.assign(localFilters, filters)
 }

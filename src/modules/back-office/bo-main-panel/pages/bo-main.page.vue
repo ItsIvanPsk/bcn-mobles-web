@@ -45,6 +45,51 @@
         </button>
       </div>
 
+      <!-- 🔎 Toolbar filtros (solo en productos) -->
+      <div
+        v-if="activePanel === 'products'"
+        class="bg-white rounded-lg shadow p-4 mb-6 flex flex-wrap gap-4 items-end"
+      >
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+          <input
+            v-model="filters.name"
+            type="text"
+            placeholder="Buscar producto..."
+            class="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+          <select v-model="filters.brand" class="border rounded px-3 py-2">
+            <option value="">Todas</option>
+            <option v-for="m in brands" :key="m" :value="m">{{ m }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+          <select v-model="filters.category" class="border rounded px-3 py-2">
+            <option value="">Todas</option>
+            <option v-for="c in categories" :key="c.id" :value="c.name">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <button
+          @click="applyFilters"
+          class="bg-[#c34b16] text-white px-4 py-2 rounded hover:bg-[#f79e78] transition"
+        >
+          Buscar
+        </button>
+        <button
+          @click="clearFilters"
+          class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition"
+        >
+          Limpiar
+        </button>
+      </div>
+
       <!-- Panel Productos -->
       <div
         v-if="activePanel === 'products'"
@@ -52,12 +97,16 @@
         style="height: 80vh"
       >
         <div
-          v-for="p in products"
+          v-for="p in filteredProducts"
           :key="p.id"
           class="flex items-center justify-between bg-white shadow rounded-lg p-4"
         >
           <div class="flex items-center gap-4">
-            <img :src="p.mainImage" alt="" class="w-16 h-16 object-cover rounded" />
+            <img
+              :src="p.mainImage?.src"
+              :alt="p.mainImage?.alt || p.name"
+              class="w-16 h-16 object-cover rounded"
+            />
             <div>
               <h2 class="font-semibold text-gray-800">{{ p.name }}</h2>
               <p class="text-sm text-gray-500">{{ p.shortDescription }}</p>
@@ -141,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { ref, computed, watch } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import { mockedProducts } from "../../../main-page/interfaces/ProductModel"
 
@@ -155,13 +204,41 @@ const activePanel = ref<"products" | "categories">(
   (route.query.panel as "products" | "categories") || "products"
 )
 
-// categorías mock (extraídas de productos)
+// filtros
+const filters = ref({
+  name: "",
+  brand: "",
+  category: ""
+})
+
+const brands = ["IKEA", "Conforama", "Maisons du Monde"]
+
 const categories = ref([
   { id: 1, name: "Sillas" },
   { id: 2, name: "Mesas" },
   { id: 3, name: "Armarios" },
   { id: 4, name: "Sofás" },
 ])
+
+const filteredProducts = computed(() => {
+  return products.value.filter((p) => {
+    const byName = filters.value.name
+      ? p.name.toLowerCase().includes(filters.value.name.toLowerCase())
+      : true
+    const byBrand = filters.value.brand ? p.brand === filters.value.brand : true
+    const byCategory = filters.value.category
+      ? p.categories?.some((c: any) => c.name === filters.value.category)
+      : true
+    return byName && byBrand && byCategory
+  })
+})
+
+function applyFilters() {
+  console.log("Aplicando filtros:", filters.value)
+}
+function clearFilters() {
+  filters.value = { name: "", brand: "", category: "" }
+}
 
 watch(
   () => route.query.panel,
@@ -179,6 +256,7 @@ function setActivePanel(panel: "products" | "categories") {
 
 function toggleMenu(id: number) {
   openMenu.value = openMenu.value === id ? null : id
+  openMenuCategory.value = null
 }
 
 function editProduct(id: number) {
@@ -200,6 +278,7 @@ function toggleVisibility(id: number) {
 
 function toggleMenuCategory(id: number) {
   openMenuCategory.value = openMenuCategory.value === id ? null : id
+  openMenu.value = null
 }
 
 function editCategory(id: number) {
