@@ -19,7 +19,7 @@
       >
         <div class="relative w-full aspect-[4/3] bg-gray-100">
           <img
-            src="/public/shop/hero-image.jpg"
+            src="/shop/hero-image.jpg"
             :alt="product.name" 
             class="w-full h-full object-cover transition-transform duration-300"
           />
@@ -45,7 +45,7 @@
       class="fixed top-1/3 right-0 transform -translate-y-1/2 bg-[#c34b16] text-white p-3 rounded-l-md shadow-lg hover:bg-[#f79e78] z-50"
       aria-label="Abrir filtros"
     >
-      <span class="material-symbols-outlined text-2xl">filter_alt</span>
+      <span class="material-symbols-outlined text-2xl" translate="no">filter_alt</span>
     </button>
 
 
@@ -230,12 +230,11 @@ function slugify(text: string) {
     .replace(/^-+|-+$/g, '')
 }
 
-function goToDetail(product: any) {
+function goToDetail(product) {
   const slug = slugify(product.name)
-  router.push({
-    name: 'product-detail',
-    params: { slug },
-    query: { id: product.id }
+  router.push({ 
+    name: 'product-detail', 
+    params: { id: product.id, slug } 
   })
 }
 

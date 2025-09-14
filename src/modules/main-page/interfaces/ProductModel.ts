@@ -1,9 +1,20 @@
 import { ref } from 'vue'
 
+/** --- Tipos --- */
 export interface ProductColor {
   name: string
   color?: string | null
   texture?: string | null
+}
+
+export interface ProductImage {
+  src: string
+  alt: string
+}
+
+export interface ProductCategory {
+  id: number
+  name: string
 }
 
 export interface ProductModel {
@@ -11,11 +22,13 @@ export interface ProductModel {
   name: string
   shortDescription: string
   description: string
-  mainImage: string
-  images: string[]
-  category: string
+  mainImage: ProductImage
+  images: ProductImage[]
+  categories: ProductCategory[]
   brand: string
   price: number
+
+  hidden?: boolean
 
   defaultSize: string
   defaultColor: string
@@ -27,19 +40,31 @@ export interface ProductModel {
   extensible?: boolean
 }
 
-const placeholderImage =
-  'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=900&fit=crop'
+/** --- Categorías base para IDs coherentes --- */
+export const BASE_CATEGORIES: ProductCategory[] = [
+  { id: 1, name: 'Sillas' },
+  { id: 2, name: 'Mesas' },
+  { id: 3, name: 'Armarios' },
+  { id: 4, name: 'Sofás' },
+]
 
-export const mockedProducts = ref<ProductModel[]>([
+/** --- Placeholder de imagen --- */
+const placeholderImage: ProductImage = {
+  src: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=900&fit=crop',
+  alt: 'Producto de ejemplo'
+}
+
+/** --- DESTACADOS --- */
+export const mockedHighlightedProducts = ref<ProductModel[]>([
   // --- SILLAS ---
   {
     id: 1,
     name: 'Silla de comedor Oslo',
     shortDescription: 'Silla nórdica con patas de madera',
     description: 'Diseño escandinavo en madera clara y asiento acolchado.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Sillas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]], // Sillas
     brand: 'BCN Mobles',
     price: 79,
     defaultSize: 'Mediana',
@@ -55,9 +80,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Silla tapizada Roma',
     shortDescription: 'Silla de comedor elegante',
     description: 'Tapizado en tela gris y patas de madera roble.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Sillas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
     brand: 'BCN Mobles',
     price: 119,
     defaultSize: 'Grande',
@@ -73,9 +98,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Silla plegable Basic',
     shortDescription: 'Silla ligera y práctica',
     description: 'Ideal para invitados o espacios reducidos, apilable.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Sillas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
     brand: 'BCN Mobles',
     price: 29,
     defaultSize: 'Mediana',
@@ -90,9 +115,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Silla lounge Milano',
     shortDescription: 'Silla baja de relax',
     description: 'Diseñada para confort, perfecta para sala de estar.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Sillas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
     brand: 'BCN Mobles',
     price: 149,
     defaultSize: 'Grande',
@@ -108,9 +133,103 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Silla ergonómica Berlin',
     shortDescription: 'Silla de oficina ajustable',
     description: 'Silla ergonómica con soporte lumbar y múltiples ajustes.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Sillas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
+    brand: 'BCN Mobles',
+    price: 219,
+    defaultSize: 'Mediana',
+    defaultColor: 'Negro',
+    colors: [
+      { name: 'Negro', color: '#000000' },
+      { name: 'Negro mate', color: '#1c1c1c' },
+      { name: 'Blanco', color: '#ffffff' }
+    ],
+  }
+])
+
+/** --- TODOS LOS PRODUCTOS --- */
+export const mockedProducts = ref<ProductModel[]>([
+  // --- SILLAS ---
+  {
+    id: 1,
+    name: 'Silla de comedor Oslo',
+    shortDescription: 'Silla nórdica con patas de madera',
+    description: 'Diseño escandinavo en madera clara y asiento acolchado.',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
+    brand: 'BCN Mobles',
+    price: 79,
+    defaultSize: 'Mediana',
+    defaultColor: 'Roble claro',
+    colors: [
+      { name: 'Roble claro', color: '#d9c6a5' },
+      { name: 'Blanco', color: '#ffffff' },
+      { name: 'Negro', color: '#000000' }
+    ],
+  },
+  {
+    id: 2,
+    name: 'Silla tapizada Roma',
+    shortDescription: 'Silla de comedor elegante',
+    description: 'Tapizado en tela gris y patas de madera roble.',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
+    brand: 'BCN Mobles',
+    price: 119,
+    defaultSize: 'Grande',
+    defaultColor: 'Roble',
+    colors: [
+      { name: 'Roble', color: '#b08d57' },
+      { name: 'Roble oscuro', color: '#5a4633' },
+      { name: 'Negro', color: '#000000' }
+    ],
+  },
+  {
+    id: 3,
+    name: 'Silla plegable Basic',
+    shortDescription: 'Silla ligera y práctica',
+    description: 'Ideal para invitados o espacios reducidos, apilable.',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
+    brand: 'BCN Mobles',
+    price: 29,
+    defaultSize: 'Mediana',
+    defaultColor: 'Negro mate',
+    colors: [
+      { name: 'Negro mate', color: '#1c1c1c' },
+      { name: 'Blanco', color: '#ffffff' }
+    ],
+  },
+  {
+    id: 4,
+    name: 'Silla lounge Milano',
+    shortDescription: 'Silla baja de relax',
+    description: 'Diseñada para confort, perfecta para sala de estar.',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
+    brand: 'BCN Mobles',
+    price: 149,
+    defaultSize: 'Grande',
+    defaultColor: 'Acaccia',
+    colors: [
+      { name: 'Acaccia', color: '#a9744f' },
+      { name: 'Roble oscuro', color: '#5a4633' },
+      { name: 'Negro mate', color: '#1c1c1c' }
+    ],
+  },
+  {
+    id: 5,
+    name: 'Silla ergonómica Berlin',
+    shortDescription: 'Silla de oficina ajustable',
+    description: 'Silla ergonómica con soporte lumbar y múltiples ajustes.',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[0]],
     brand: 'BCN Mobles',
     price: 219,
     defaultSize: 'Mediana',
@@ -128,9 +247,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Mesa comedor Estocolmo',
     shortDescription: 'Mesa extensible para comedor',
     description: 'Extensible hasta 2,5m, en acabado roble claro.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Mesas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[1]], // Mesas
     brand: 'BCN Mobles',
     price: 499,
     defaultSize: 'Grande',
@@ -147,9 +266,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Mesa redonda Valencia',
     shortDescription: 'Mesa de comedor redonda',
     description: 'Mesa clásica en madera maciza.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Mesas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[1]],
     brand: 'BCN Mobles',
     price: 399,
     defaultSize: 'Mediana',
@@ -166,9 +285,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Mesa centro Madrid',
     shortDescription: 'Mesa baja moderna',
     description: 'Mesa de centro con diseño minimalista.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Mesas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[1]],
     brand: 'BCN Mobles',
     price: 189,
     defaultSize: 'Mediana',
@@ -185,9 +304,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Mesa escritorio Bilbao',
     shortDescription: 'Mesa de estudio con cajones',
     description: 'Perfecta para trabajar desde casa.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Mesas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[1]],
     brand: 'BCN Mobles',
     price: 299,
     defaultSize: 'Mediana',
@@ -204,9 +323,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Mesa rústica León',
     shortDescription: 'Mesa comedor rústica',
     description: 'Hecha en madera maciza de acaccia.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Mesas',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[1]],
     brand: 'BCN Mobles',
     price: 549,
     defaultSize: 'Grande',
@@ -225,9 +344,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Armario Paris',
     shortDescription: 'Armario de dos puertas correderas',
     description: 'Con espejo y acabado moderno.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Armarios',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[2]], // Armarios
     brand: 'BCN Mobles',
     price: 699,
     defaultSize: 'Grande',
@@ -243,9 +362,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Armario Sevilla',
     shortDescription: 'Armario clásico de madera',
     description: 'Fabricado en roble macizo, gran durabilidad.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Armarios',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[2]],
     brand: 'BCN Mobles',
     price: 899,
     defaultSize: 'Grande',
@@ -261,9 +380,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Armario Tokyo',
     shortDescription: 'Armario minimalista japonés',
     description: 'Acabado en negro mate con puertas lisas.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Armarios',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[2]],
     brand: 'BCN Mobles',
     price: 799,
     defaultSize: 'Mediana',
@@ -279,9 +398,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Armario juvenil Córdoba',
     shortDescription: 'Armario juvenil compacto',
     description: 'Color blanco con detalles modernos.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Armarios',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[2]],
     brand: 'BCN Mobles',
     price: 499,
     defaultSize: 'Mediana',
@@ -297,9 +416,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Armario Lisboa',
     shortDescription: 'Armario moderno con cajones',
     description: 'Acabado en acaccia con detalles en negro.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Armarios',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[2]],
     brand: 'BCN Mobles',
     price: 749,
     defaultSize: 'Mediana',
@@ -317,9 +436,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Sofá modular Barcelona',
     shortDescription: 'Sofá modular configurable',
     description: 'Disponible en múltiples configuraciones y colores.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Muebles',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[4 - 1]], // Sofás (id 4)
     brand: 'BCN Mobles',
     price: 1099,
     defaultSize: 'Grande',
@@ -337,9 +456,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Sofá cheslong Valencia',
     shortDescription: 'Sofá con chaise longue',
     description: 'Diseño elegante y cómodo con chaise longue incluido.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Muebles',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[3]],
     brand: 'BCN Mobles',
     price: 1299,
     defaultSize: 'Grande',
@@ -356,9 +475,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Sofá relax Málaga',
     shortDescription: 'Sofá reclinable eléctrico',
     description: 'Perfecto para cine en casa.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Muebles',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[3]],
     brand: 'BCN Mobles',
     price: 1599,
     defaultSize: 'Grande',
@@ -375,9 +494,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Sofá cama Madrid',
     shortDescription: 'Sofá convertible en cama',
     description: 'Ideal para apartamentos pequeños.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Muebles',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[3]],
     brand: 'BCN Mobles',
     price: 799,
     defaultSize: 'Mediana',
@@ -394,9 +513,9 @@ export const mockedProducts = ref<ProductModel[]>([
     name: 'Sofá rinconera Granada',
     shortDescription: 'Sofá rinconera grande',
     description: 'Ideal para familias numerosas.',
-    mainImage: placeholderImage,
-    images: [placeholderImage],
-    category: 'Muebles',
+    mainImage: { ...placeholderImage },
+    images: [{ ...placeholderImage }],
+    categories: [BASE_CATEGORIES[3]],
     brand: 'BCN Mobles',
     price: 1999,
     defaultSize: 'Grande',

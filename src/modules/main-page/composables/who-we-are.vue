@@ -3,7 +3,7 @@
       <div class="grid grid-cols-2 gap-3 items-center">
         <div>
           <img
-            src="/public/shop/who-we-are.jpg"
+            src="/shop/who-we-are.jpg"
             alt="Por qué nosotros"
             class="shadow-md w-full h-[40rem] object-cover object-top"
           />

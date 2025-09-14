@@ -22,10 +22,10 @@
       <h4>Síguenos</h4>
         <div class="socials">
           <a href="https://www.facebook.com/Bcnmobles" target="_blank" aria-label="Facebook">
-            <img class="h-[2rem] w-[2rem]" src="/public/fb_logo.png"/>
+            <img class="h-[2rem] w-[2rem]" src="/fb_logo.png"/>
           </a>
           <a href="https://www.instagram.com/bcnmobles/?hl=es" target="_blank" aria-label="Instagram">
-            <img class="h-[2rem] w-[2rem]" src="/public/ig_logo.png"/>
+            <img class="h-[2rem] w-[2rem]" src="/ig_logo.png"/>
           </a>
         </div>
     </div>

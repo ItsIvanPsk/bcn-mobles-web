@@ -46,13 +46,13 @@
         class="bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
         @click="prevSlide"
       >
-        <span class="material-symbols-outlined">chevron_left</span>
+        <span class="material-symbols-outlined" translate="no">chevron_left</span>
       </button>
       <button
         class="bg-black/40 backdrop-blur-sm text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/60 shadow-lg"
         @click="nextSlide"
       >
-        <span class="material-symbols-outlined">chevron_right</span>
+        <span class="material-symbols-outlined" translate="no">chevron_right</span>
       </button>
     </div>
 

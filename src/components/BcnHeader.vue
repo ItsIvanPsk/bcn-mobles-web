@@ -1,9 +1,11 @@
 <template>
-  <header class="flex items-center justify-between px-4 py-2 bg-white border-b border-lightgray min-h-[60px]">
+  <header
+    class="flex items-center justify-between px-4 py-2 bg-white border-b border-lightgray min-h-[60px]"
+  >
     <!-- Logo -->
     <div class="flex-shrink-0">
       <a href="/">
-        <img src="/public/logo.jpg" alt="BcnMobles Logo" class="h-10" />
+        <img src="/logo.jpg" alt="BcnMobles Logo" class="h-10" />
       </a>
     </div>
 
@@ -47,7 +49,7 @@
               @click="closeSearch"
               aria-label="Cerrar"
             >
-              <span class="material-symbols-outlined text-darkgray">close</span>
+              <span class="material-symbols-outlined text-darkgray" translate="no" >close</span>
             </button>
           </div>
         </transition>
@@ -58,7 +60,7 @@
           @click="searchOpen = true"
           aria-label="Buscar"
         >
-          <span class="material-symbols-outlined text-darkgray">search</span>
+          <span class="material-symbols-outlined text-darkgray" translate="no">search</span>
         </button>
 
         <!-- Dropdown -->
@@ -73,14 +75,24 @@
             class="flex items-center p-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
             @mousedown.prevent="goToProduct(p)"
           >
-            <img :src="p.mainImage" alt="product" class="w-14 h-10 object-cover rounded mr-2" />
+            <img
+              :src="p.mainImage"
+              alt="product"
+              class="w-14 h-10 object-cover rounded mr-2"
+            />
             <div class="flex-1 min-w-0">
               <div class="text-sm font-semibold truncate">{{ p.name }}</div>
-              <div class="text-xs text-mediumgray truncate">{{ p.shortDescription }}</div>
+              <div class="text-xs text-mediumgray truncate">
+                {{ p.shortDescription }}
+              </div>
             </div>
           </div>
-          <div v-if="loading" class="text-center py-2 text-xs text-mediumgray">Cargando más...</div>
-          <div v-if="finished" class="text-center py-2 text-xs text-mediumgray">No hay más resultados</div>
+          <div v-if="loading" class="text-center py-2 text-xs text-mediumgray">
+            Cargando más...
+          </div>
+          <div v-if="finished" class="text-center py-2 text-xs text-mediumgray">
+            No hay más resultados
+          </div>
         </div>
       </div>
 
@@ -90,12 +102,30 @@
         aria-label="Favoritos"
         @click="router.push('/productos-favoritos')"
       >
-        <span class="material-symbols-outlined text-darkgray">favorite</span>
+        <span class="material-symbols-outlined text-darkgray" translate="no">favorite</span>
+      </button>
+
+      <!-- User -->
+      <button
+        class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
+        aria-label="Usuario"
+        @click="goUserPanel"
+      >
+        <span class="material-symbols-outlined text-darkgray" translate="no">person</span>
+      </button>
+
+      <!-- Admin (solo si rol === fullAdmin) -->
+      <button
+        v-if="isFullAdmin"
+        class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
+        aria-label="Admin"
+        @click="router.push('/bo-panel')"
+      >
+        <span class="material-symbols-outlined text-darkgray" translate="no">settings</span>
       </button>
     </div>
   </header>
 </template>
-
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
@@ -107,17 +137,34 @@ const searchOpen = ref(false)
 const router = useRouter()
 
 const products = mockedProducts
-
 const page = ref(1)
 const pageSize = 5
 const loading = ref(false)
 const finished = ref(false)
+const paginatedProducts = ref<typeof products.value>([])
 
 const filteredProducts = computed(() =>
-  products.value.filter((p) => p.name.toLowerCase().includes(q.value.toLowerCase())),
+  products.value.filter((p) =>
+    p.name.toLowerCase().includes(q.value.toLowerCase()),
+  ),
 )
 
-const paginatedProducts = ref<typeof products.value>([])
+const isLoggedIn = computed(() => {
+  return !!localStorage.getItem('user')
+})
+
+const isFullAdmin = computed(() => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  return user?.role === 'fullAdmin'
+})
+
+function goUserPanel() {
+  if (isLoggedIn.value) {
+    router.push('/user-panel')
+  } else {
+    router.push('/iniciar-sesion')
+  }
+}
 
 watch(q, () => {
   resetPagination()

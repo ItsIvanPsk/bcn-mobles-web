@@ -45,7 +45,7 @@
       class="fixed top-1/3 right-0 transform -translate-y-1/2 bg-blue-600 text-white p-3 rounded-l-md shadow-lg hover:bg-blue-700 z-50"
       aria-label="Abrir filtros"
     >
-      <span class="material-symbols-outlined text-2xl">filter_alt</span>
+      <span class="material-symbols-outlined text-2xl" translate="no">filter_alt</span>
     </button>
 
     <!-- Drawer de filtros -->
@@ -91,7 +91,7 @@
         <div class="p-4 border-t flex gap-2">
           <button
             @click="applyFilters"
-            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
+            class="flex-1 bg-[#c34b16] hover:bg-[#f79e78] text-white py-2 rounded-md transition"
           >
             Buscar
           </button>

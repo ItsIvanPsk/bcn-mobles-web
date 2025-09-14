@@ -9,6 +9,12 @@ import Cookies from '../pages/Cookies.vue'
 import PrivacyPolice from '../pages/PrivacyPolice.vue'
 import FavoritesListPage from '../modules/favorites/favorites-list.page.vue'
 import FAQs from '../pages/FAQs.vue'
+import LoginPage from '../modules/auth/login/login.page.vue'
+import RegisterPage from '../modules/auth/register/register.page.vue'
+import BoMainPage from '../modules/back-office/bo-main-panel/pages/bo-main.page.vue'
+import UserPanelPage from '../modules/auth/user-panel/user-panel.page.vue'
+import BoEditProductPage from '../modules/back-office/bo-edit-product/bo-edit-product.page.vue'
+import BoEditCategoryPage from '../modules/back-office/bo-edit-category/bo-edit-category.page.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +63,46 @@ const router = createRouter({
       path: '/preguntas-frecuentes',
       name: 'faq',
       component: FAQs,
+    },
+    {
+      path: '/iniciar-sesion',
+      name: 'login',
+      component: LoginPage,
+    },
+    {
+      path: '/crear-cuenta',
+      name: 'register',
+      component: RegisterPage,
+    },
+    {
+      path: '/user-panel',
+      name: 'user-panel',
+      component: UserPanelPage,
+    },
+    {
+      path: "/bo-panel",
+      name: 'bo-panel',
+      component: BoMainPage
+    },
+    {
+      path: "/bo-panel/product/new",
+      name: 'bo-new-product',
+      component: BoEditProductPage
+    },
+    {
+      path: '/bo-panel/category/new',
+      name: 'bo-new-category',
+      component: () => BoEditCategoryPage
+    },
+    {
+      path: "/bo-panel/product/edit/:id",
+      name: 'bo-edit-product',
+      component: BoEditProductPage
+    },
+    {
+      path: '/bo-panel/category/edit/:id',
+      name: 'bo-edit-category',
+      component: () => BoEditCategoryPage
     },
     {
       path: '/:pathMatch(.*)*',
