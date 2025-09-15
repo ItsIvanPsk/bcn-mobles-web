@@ -1,5 +1,6 @@
 <template>
-  <section>
+  <div class=" w-full min-h-[79vh] max-h-[100vh]">
+<section>
     <BcnDiscountHero
       :dateText="'Hasta el 30 de junio'"
       :title="'Tus productos favoritos'"
@@ -10,14 +11,14 @@
   
   <section class="p-6 relative">
     <!-- Productos favoritos -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6">
       <div
         v-for="product in products"
         :key="product.id"
-        class="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white cursor-pointer"
+        class="group border rounded-xl overflow-hidden shadow w-[20rem] hover:shadow-lg transition bg-white cursor-pointer"
         @click="goToDetail(product)"
       >
-        <div class="relative w-full aspect-[4/3] bg-gray-100">
+        <div class="relative w-full aspect-[2/1] bg-gray-100">
           <img
             :src="product.mainImage?.src"
             :alt="product.mainImage?.alt || product.name"
@@ -115,6 +116,7 @@
       </aside>
     </transition>
   </section>
+  </div>
 </template>
 
 <script setup lang="ts">

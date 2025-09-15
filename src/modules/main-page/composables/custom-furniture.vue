@@ -5,27 +5,27 @@
       <div>
         <img
           src="/shop/hero-image.jpg"
-          alt="Empresa de confianza: por qué elegirnos"
+          alt="Diseño y fabricación de muebles a medida"
           class="shadow-md w-full h-80 md:h-[40rem] object-cover object-center"
         />
       </div>
 
       <!-- Texto -->
       <div class="p-6 md:p-10">
-        <h2 class="text-2xl font-bold mb-4 text-black">¿Por qué elegirnos?</h2>
+        <h2 class="text-2xl font-bold mb-4 text-black">Muebles a medida que reflejan tu estilo</h2>
         <p class="mb-3 text-base text-black">
-          Somos una empresa comprometida con la <strong>calidad del servicio</strong> y la 
-          <strong>satisfacción de nuestros clientes</strong>. Trabajamos con profesionalidad y 
-          transparencia en cada proyecto para garantizar una experiencia excelente.
+          Creamos <strong>muebles personalizados</strong> que se adaptan a tu espacio y a tu estilo de vida. 
+          Cada pieza se fabrica con materiales de alta calidad y un diseño único, pensado para 
+          combinar funcionalidad y estética en tu hogar o negocio.
         </p>
         <p class="text-sm text-black">
-          Contamos con un equipo experto y recursos de confianza para ofrecer soluciones seguras, eficientes 
-          y adaptadas a tus necesidades.
+          Nuestro equipo de diseñadores y carpinteros transforma tus ideas en realidad, garantizando muebles 
+          duraderos, prácticos y llenos de personalidad.
         </p>
         <button
           class="mt-4 px-5 py-2 bg-[#c34b16] text-white rounded-md transition"
         >
-          Descubre más sobre nosotros
+          Diseña tu mueble a medida
         </button>
       </div>
     </div>

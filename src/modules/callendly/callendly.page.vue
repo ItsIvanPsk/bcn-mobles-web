@@ -19,7 +19,7 @@
         </div>
 
         <!-- Calendly embed -->
-        <div class="w-[40rem] h-[50rem] border rounded-lg shadow bg-white overflow-hidden">
+        <div class="w-full h-[40rem] md:w-[40rem] md:h-[50rem] border rounded-lg shadow bg-white overflow-hidden">
           <iframe
             :src="calendlyUrl"
             width="100%"
@@ -33,24 +33,52 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-import { useRoute } from "vue-router"
+import { ref, computed, onMounted } from "vue"
+import { useRoute, useRouter } from "vue-router"
 
 const route = useRoute()
+const router = useRouter()
 
 // URL base de Calendly
 const baseCalendly = "https://calendly.com/ivanfigueredo-et/presupuestos"
 
-// Construimos la URL con query params si existen
+// Datos del usuario
+const userName = ref("")
+const userEmail = ref("")
+const userDesc = ref("")
+
+onMounted(() => {
+  // 1. Recuperar datos desde localStorage.user
+  const storedUser = localStorage.getItem("user")
+  if (storedUser) {
+    try {
+      const parsed = JSON.parse(storedUser)
+      userName.value = `${parsed.firstName ?? ""} ${parsed.lastName ?? ""}`.trim()
+      userEmail.value = parsed.email ?? ""
+    } catch (e) {
+      console.error("Error parseando usuario de localStorage:", e)
+    }
+  }
+
+  // 2. Si viene descripción por query, añadirla
+  if (route.query.description) {
+    userDesc.value = route.query.description as string
+  }
+
+  // 3. Si no hay usuario en localStorage, redirigir a login
+  if (!userEmail.value) {
+    router.push("/login")
+  }
+})
+
 const calendlyUrl = computed(() => {
   const params = new URLSearchParams()
 
-  // 🔹 params que Calendly entiende
-  if (route.query.name) params.set("name", route.query.name as string)
-  if (route.query.email) params.set("email", route.query.email as string)
-  if (route.query.description) params.set("a1", route.query.description as string)
+  if (userName.value) params.set("name", userName.value)
+  if (userEmail.value) params.set("email", userEmail.value)
+  if (userDesc.value) params.set("a1", userDesc.value)
 
-  // 🔹 parámetros de embed obligatorios
+  // parámetros obligatorios
   params.set("embed_domain", "bcn-mobles-web")
   params.set("embed_type", "Inline")
   params.set("locale", "es")

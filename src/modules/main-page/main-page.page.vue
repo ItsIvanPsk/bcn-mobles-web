@@ -25,6 +25,10 @@
     <SpotlightProducts />
 
     <WhoWeAre />
+
+    <MovingService />
+    
+    <CustomFurniture />
     
     <RelatedCompanies :brands="brands" />
   </div>
@@ -36,6 +40,8 @@ import { useRouter } from 'vue-router'
 import WhoWeAre from './composables/who-we-are.vue'
 import RelatedCompanies from './composables/related-companies.vue'
 import SpotlightProducts from './composables/spotlight-products.vue'
+import MovingService from './composables/moving-service.vue'
+import CustomFurniture from './composables/custom-furniture.vue'
 const router = useRouter()
 const brands = [
   {

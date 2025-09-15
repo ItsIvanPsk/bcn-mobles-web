@@ -1,5 +1,5 @@
 <template>
-  <div class="contact-page">
+  <div class="contact-page w-full min-h-[79vh] max-h-[100vh]">
     <div class="contact-card">
       <h4 class="title">Contáctanos</h4>
 

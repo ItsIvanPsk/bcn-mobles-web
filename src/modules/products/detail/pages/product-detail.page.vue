@@ -143,7 +143,7 @@
 
           <button
             class="bg-[#c34b16] text-white py-2 px-4 rounded hover:bg-[#a03d13] transition"
-            @click="addToCart"
+            @click="goToBooking"
           >
             Solicitar cita para este producto
           </button>
@@ -269,20 +269,19 @@ function goToDetail(prod: any) {
 
 function goToBooking() {
   if (!product.value) return
+
+  const config = `
+    Producto: ${product.value.name}
+    Tamaño: ${selected.value.size || '-'}
+    Color: ${selected.value.color || '-'}
+    Tipo: ${selected.value.type || '-'}
+    Medida: ${selected.value.measure || '-'}
+    Extensible: ${selected.value.extensible ? 'Sí' : 'No'}
+  `.trim()
+
   router.push({
     path: '/pedir-cita',
-    query: { description: `Producto: ${product.value.name}` },
+    query: { description: config },
   })
-}
-
-function addToCart() {
-  alert(
-    `Añadido al carrito: ${product.value.name}
-Tamaño: ${selected.value.size}
-Color: ${selected.value.color}
-Tipo: ${selected.value.type}
-Medida: ${selected.value.measure}
-Extensible: ${selected.value.extensible ? 'Sí' : 'No'}`
-  )
 }
 </script>

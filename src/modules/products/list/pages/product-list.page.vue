@@ -8,13 +8,13 @@
     />
   </section>
   
-  <section class="p-6 relative">
+  <section class="p-6 relative min-h-[50vh] flex flex-col">
     <!-- Productos -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-if="products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
       <div
         v-for="product in products"
         :key="product.id"
-        class="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white cursor-pointer"
+        class="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white cursor-pointer min-w-[80vh] max-h-[85vh]"
         @click="goToDetail(product)"
       >
         <div class="relative w-full aspect-[4/3] bg-gray-100">
@@ -26,6 +26,7 @@
         </div>
         <div class="p-4">
           <h3 class="text-base md:text-lg font-semibold mb-1">{{ product.name }}</h3>
+          <p class="text-sm text-gray-600">Marca: {{ product.brand }}</p>
           <p class="text-sm text-gray-600">
             Categorías: 
             <span v-for="(cat, i) in product.categories" :key="cat.id">
@@ -40,6 +41,11 @@
           </p>
         </div>
       </div>
+    </div>
+
+    <!-- Mensaje si no hay productos -->
+    <div v-else class="flex-1 flex items-center justify-center text-gray-600 text-lg">
+      No se han encontrado productos con los filtros seleccionados.
     </div>
 
     <!-- Loader infinito -->
@@ -95,6 +101,10 @@
             <option value="">Color</option>
             <option v-for="c in colors" :key="c" :value="c">{{ c }}</option>
           </select>
+          <select v-model="localFilters.brand" class="border p-4 rounded w-full">
+            <option value="">Marca</option>
+            <option v-for="b in brands" :key="b" :value="b">{{ b }}</option>
+          </select>
         </div>
 
         <!-- Footer botones -->
@@ -138,7 +148,8 @@ const filters = reactive({
   name: '',
   category: '',
   size: '',
-  color: ''
+  color: '',
+  brand: ''
 })
 
 const localFilters = reactive({ ...filters })
@@ -152,6 +163,7 @@ const categories = [
 ]
 const sizes = ['Pequeño', 'Mediana', 'Grande']
 const colors = ['Roble', 'Roble claro', 'Acaccia', 'Roble oscuro', 'Negro', 'Negro mate', 'Blanco']
+const brands = ['Ikea', 'Conforama', 'BCN Mobles']
 
 onMounted(() => {
   allProducts.value = Array.isArray(mockedProducts) ? mockedProducts : mockedProducts.value
@@ -175,14 +187,15 @@ async function fetchProducts(reset = false) {
     )
   }
   if (filters.size) {
-    filtered = filtered.filter((p) =>
-      p.sizes?.includes(filters.size)
-    )
+    filtered = filtered.filter((p) => p.sizes?.includes(filters.size))
   }
   if (filters.color) {
     filtered = filtered.filter((p) =>
       p.colors?.some((c: any) => c.name === filters.color)
     )
+  }
+  if (filters.brand) {
+    filtered = filtered.filter((p) => p.brand === filters.brand)
   }
 
   const start = (page.value - 1) * perPage
@@ -214,7 +227,10 @@ onMounted(() => {
 
 function applyFilters() {
   Object.assign(filters, localFilters)
-  router.replace({ query: { ...filters } })
+  router.replace({ query: { 
+    ...filters,
+    Marca: filters.brand
+  } })
   resetAndFetch()
   showFilters.value = false
 }
@@ -251,6 +267,7 @@ function syncFiltersWithQuery() {
   filters.category = String(route.query.category || '')
   filters.size = String(route.query.size || '')
   filters.color = String(route.query.color || '')
+  filters.brand = String(route.query.brand || '')
 
   Object.assign(localFilters, filters)
 }

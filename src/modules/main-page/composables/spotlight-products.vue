@@ -1,9 +1,9 @@
 <template>
     <section class="p-6">
       <div class="flex justify-center">
-        <h2 class="mb-4 font-medium">Productos destacados</h2>
+        <h2 class="mb-4 font-medium" style="font-size: 2rem;">Productos destacados de la temporada</h2>
       </div>
-      <ProductGrid />
+      <ProductGrid class="pb-7" />
     </section>
 </template>
 

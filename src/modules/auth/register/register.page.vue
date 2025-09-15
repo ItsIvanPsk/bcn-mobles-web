@@ -3,7 +3,14 @@
     <div class="bg-white shadow-lg rounded-2xl p-8 w-96">
       <h2 class="text-2xl font-bold text-center mb-6">Registro</h2>
 
-      <Form @submit="onRegister" :validation-schema="schema" class="space-y-4">
+      <Form
+        @submit="onRegister"
+        :validation-schema="schema"
+        :initial-values="{ terms: false }"
+        validateOnBlur="false"
+        validateOnChange="false"
+        class="space-y-4"
+      >
         <!-- Nombre -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Nombre</label>
@@ -32,6 +39,7 @@
           <Field
             name="email"
             type="email"
+            :validate-on-input="true"
             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-[#f79e78] focus:border-[#f79e78]"
           />
           <ErrorMessage name="email" class="text-red-500 text-sm" />
@@ -43,10 +51,24 @@
           <Field
             name="password"
             type="password"
+            :validate-on-input="true"
             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-[#f79e78] focus:border-[#f79e78]"
           />
           <ErrorMessage name="password" class="text-red-500 text-sm" />
         </div>
+
+        <!-- Condiciones -->
+        <div class="flex items-start gap-2">
+          <Field name="terms" type="checkbox" class="mt-1" />
+          <label class="text-sm text-gray-700">
+            Acepto las
+            <a href="/condiciones" target="_blank" class="text-[#c34b16] hover:underline">
+              condiciones de uso
+            </a>
+            y deseo recibir la newsletter.
+          </label>
+        </div>
+        <ErrorMessage name="terms" class="text-red-500 text-sm" />
 
         <!-- Botón -->
         <button
@@ -85,18 +107,18 @@ const schema = yup.object({
     .matches(/[A-Z]/, "Debe contener al menos una mayúscula")
     .matches(/[0-9]/, "Debe contener al menos un número")
     .matches(/[^a-zA-Z0-9]/, "Debe contener al menos un símbolo"),
+  terms: yup
+    .boolean()
+    .oneOf([true], "Debes aceptar las condiciones y la newsletter para registrarte"),
 })
 
 const onRegister = async (values) => {
   console.log("Mock register:", values)
 
-  // simulamos llamada a API (mock 200)
   await new Promise((resolve) => setTimeout(resolve, 800))
 
-  // 🔹 limpiamos usuario previo
   localStorage.removeItem("user")
 
-  // guardamos nuevo usuario
   localStorage.setItem(
     "user",
     JSON.stringify({
@@ -104,6 +126,7 @@ const onRegister = async (values) => {
       lastName: values.lastName,
       email: values.email,
       role: "user",
+      newsletter: true,
     })
   )
 

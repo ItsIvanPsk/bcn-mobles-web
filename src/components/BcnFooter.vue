@@ -2,18 +2,23 @@
   <footer class="footer">
     <!-- Columna 1 -->
     <div class="footer-col">
-      <h3>BCN Mobles</h3>
-      <p>© 2025 Todos los derechos reservados</p>
+      <h3>Enlaces rápidos</h3>
+      <ul>
+        <li><button @click="goTo('contacto')">Contacto</button></li>
+        <li><button @click="goTo('preguntas-frequentes')">Preguntas frecuentes</button></li>
+        <li><button @click="goTo('productos')">Productos</button></li>
+        <li><button @click="goTo('servicios')">Servicios</button></li>
+      </ul>
     </div>
-
+    
     <!-- Columna 2 -->
     <div class="footer-col">
-      <h4>Enlaces legales</h4>
+      <h3>BCN Mobles</h3>
       <ul>
         <li><button @click="goTo('aviso-legal')">Aviso legal</button></li>
         <li><button @click="goTo('politica-de-privacidad')">Privacidad</button></li>
         <li><button @click="goTo('acuerdo-de-cookies')">Cookies</button></li>
-        <li><button @click="goTo('preguntas-frequentes')">FAQs</button></li>
+        <li>© 2025 Todos los derechos reservados</li>
       </ul>
     </div>
 

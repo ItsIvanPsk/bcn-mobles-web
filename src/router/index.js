@@ -4,9 +4,9 @@ import PageNotFound from '../pages/ErrorNotFound.vue'
 import ProductList from '../modules/products/list/pages/product-list.page.vue'
 import ProductDetail from '../modules/products/detail/pages/product-detail.page.vue'
 import CallendlyPage from '../modules/callendly/callendly.page.vue'
-import LegalAdvice from '../pages/LegalAdvice.vue'
-import Cookies from '../pages/Cookies.vue'
-import PrivacyPolice from '../pages/PrivacyPolice.vue'
+import LegalAdvice from '../pages/legal/LegalAdvice.vue'
+import Cookies from '../pages/legal/Cookies.vue'
+import PrivacyPolice from '../pages/legal/PrivacyPolice.vue'
 import FavoritesListPage from '../modules/favorites/favorites-list.page.vue'
 import FAQs from '../pages/FAQs.vue'
 import LoginPage from '../modules/auth/login/login.page.vue'
@@ -15,6 +15,12 @@ import BoMainPage from '../modules/back-office/bo-main-panel/pages/bo-main.page.
 import UserPanelPage from '../modules/auth/user-panel/user-panel.page.vue'
 import BoEditProductPage from '../modules/back-office/bo-edit-product/bo-edit-product.page.vue'
 import BoEditCategoryPage from '../modules/back-office/bo-edit-category/bo-edit-category.page.vue'
+import ContactPage from '../modules/contact-page/contact.page.vue'
+
+// 🔹 Nuevas páginas de servicios
+import PresupuestosAMedida from '../pages/services/PresupuestosAMedida.vue'
+import Mudanzas from '../pages/services/Mudanzas.vue'
+import MueblesAMedida from '../pages/services/MueblesAMedida.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,30 +86,55 @@ const router = createRouter({
       component: UserPanelPage,
     },
     {
-      path: "/bo-panel",
-      name: 'bo-panel',
-      component: BoMainPage
+      path: '/contacto',
+      name: 'contact',
+      component: ContactPage,
+    },
+
+    // 🔹 Servicios
+    {
+      path: '/servicios/presupuestos-a-medida',
+      name: 'presupuestos-a-medida',
+      component: PresupuestosAMedida,
     },
     {
-      path: "/bo-panel/product/new",
+      path: '/servicios/mudanzas',
+      name: 'mudanzas',
+      component: Mudanzas,
+    },
+    {
+      path: '/servicios/muebles-a-medida',
+      name: 'muebles-a-medida',
+      component: MueblesAMedida,
+    },
+
+    // 🔹 Backoffice
+    {
+      path: '/bo-panel',
+      name: 'bo-panel',
+      component: BoMainPage,
+    },
+    {
+      path: '/bo-panel/product/new',
       name: 'bo-new-product',
-      component: BoEditProductPage
+      component: BoEditProductPage,
     },
     {
       path: '/bo-panel/category/new',
       name: 'bo-new-category',
-      component: () => BoEditCategoryPage
+      component: BoEditCategoryPage,
     },
     {
-      path: "/bo-panel/product/edit/:id",
+      path: '/bo-panel/product/edit/:id',
       name: 'bo-edit-product',
-      component: BoEditProductPage
+      component: BoEditProductPage,
     },
     {
       path: '/bo-panel/category/edit/:id',
       name: 'bo-edit-category',
-      component: () => BoEditCategoryPage
+      component: BoEditCategoryPage,
     },
+
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',

@@ -53,20 +53,48 @@ const loginForm = ref({
   password: "",
 })
 
+// Lista de usuarios permitidos
+const users = [
+  {
+    email: "user@bcnmobles.com",
+    password: "P@ssw0rd", // puedes poner la clave que quieras aquí
+    firstName: "Usuario",
+    lastName: "Normal",
+    role: "user",
+  },
+  {
+    email: "admon@bcnmobles.com",
+    password: "P@ssw0rd", // o la que quieras asociar
+    firstName: "Usuario",
+    lastName: "Admin",
+    role: "fullAdmin",
+  },
+]
+
 const onLogin = async () => {
-  console.log("Mock login:", loginForm.value)
+  console.log("Intento de login:", loginForm.value)
 
-  await new Promise((resolve) => setTimeout(resolve, 800))
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
-  localStorage.removeItem("user")
+  // Buscar en la lista de usuarios
+  const foundUser = users.find(
+    (u) =>
+      u.email === loginForm.value.email && u.password === loginForm.value.password
+  )
 
+  if (!foundUser) {
+    alert("Credenciales incorrectas")
+    return
+  }
+
+  // Guardar usuario en localStorage
   localStorage.setItem(
     "user",
     JSON.stringify({
-      firstName: "Usuario",
-      lastName: "Demo",
-      email: loginForm.value.email,
-      role: "fullAdmin",
+      firstName: foundUser.firstName,
+      lastName: foundUser.lastName,
+      email: foundUser.email,
+      role: foundUser.role,
     })
   )
 
