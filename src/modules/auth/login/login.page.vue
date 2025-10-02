@@ -8,7 +8,7 @@
           <label class="block text-sm font-medium text-gray-700">Correo</label>
           <input
             v-model="loginForm.email"
-            type="email"
+            type="text"
             required
             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-[#f79e78] focus:border-[#f79e78]"
           />
@@ -45,6 +45,7 @@
 <script setup>
 import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { useAuthStore } from '../../../store/auth';
 
 const router = useRouter()
 
@@ -69,8 +70,16 @@ const users = [
     lastName: "Admin",
     role: "fullAdmin",
   },
+  {
+    email: "guest",
+    password: "guest", // o la que quieras asociar
+    firstName: "Usuario",
+    lastName: "Admin",
+    role: "fullAdmin",
+  },
 ]
 
+const auth = useAuthStore();
 const onLogin = async () => {
   console.log("Intento de login:", loginForm.value)
 
@@ -97,6 +106,14 @@ const onLogin = async () => {
       role: foundUser.role,
     })
   )
+
+  // Actualizar el store global para reactividad inmediata
+  auth.login({
+    firstName: foundUser.firstName,
+    lastName: foundUser.lastName,
+    email: foundUser.email,
+    type: foundUser.role,
+  });
 
   router.push("/user-panel")
 }

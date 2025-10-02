@@ -143,4 +143,25 @@ const router = createRouter({
   ],
 })
 
+import { useAuthStore } from '../store/auth';
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore();
+  const backofficeRoutes = [
+    '/bo-panel',
+    '/bo-panel/product/new',
+    '/bo-panel/category/new',
+    '/bo-panel/product/edit/:id',
+    '/bo-panel/category/edit/:id',
+  ];
+  // Si la ruta es de backoffice y el usuario no es fullAdmin, redirige al login
+  if (backofficeRoutes.some(r => to.path.startsWith(r.replace(':id', '')))) {
+    if (!auth.isFullAdmin) {
+      next('/iniciar-sesion');
+      return;
+    }
+  }
+  next();
+});
+
 export default router

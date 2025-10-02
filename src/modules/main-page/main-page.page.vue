@@ -24,6 +24,21 @@
 
     <SpotlightProducts />
 
+    <div v-if="showDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md text-center animate-fade-in">
+        <h2 class="text-2xl font-bold text-[#c34b16] mb-2">¡Suscríbete a nuestra newsletter gratuita!</h2>
+          <p class="mb-4 text-gray-700">Recibe ofertas, novedades y consejos exclusivos directamente en tu correo.</p>
+          <form @submit.prevent="handleSubscribe">
+            <input v-model="email" type="email" required placeholder="Tu email" class="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#c34b16]" />
+            <button type="submit" class="w-full bg-[#c34b16] text-white py-2 px-4 rounded-lg hover:bg-[#f79e78] transition font-semibold">Suscribirme</button>
+              <p class="mt-2 text-xs text-gray-500">
+                Al suscribirte aceptas los <router-link to="/legal/newsletter-terms" class="text-[#c34b16] underline">Términos y Condiciones</router-link> de la newsletter.
+              </p>
+          </form>
+        <button @click="closeDialog" class="mt-4 text-sm text-gray-500 hover:text-[#c34b16]">No, gracias</button>
+      </div>
+    </div>
+
     <WhoWeAre />
 
     <MovingService />
@@ -35,8 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import BcnHero from '../../components/BcnHero.vue'  
+import { ref, onMounted } from 'vue';
+import { useNewsletterDialog } from '../../composables/useNewsletterDialog';
 import { useRouter } from 'vue-router'
+import BcnHero from '../../components/BcnHero.vue'  
 import WhoWeAre from './composables/who-we-are.vue'
 import RelatedCompanies from './composables/related-companies.vue'
 import SpotlightProducts from './composables/spotlight-products.vue'
@@ -50,6 +67,7 @@ const brands = [
     logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
   },
   {
+          
     id: 2,
     name: 'Adidas',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg',
@@ -60,6 +78,15 @@ const brands = [
     logo: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Reebok_2019_logo.svg',
   },
 ]
+const { showDialog, checkAndPrompt, closeDialog, subscribe } = useNewsletterDialog();
+const email = ref('');
+function handleSubscribe() {
+  subscribe(email.value);
+  email.value = '';
+}
+onMounted(() => {
+  checkAndPrompt();
+});
 </script>
 
 <style scoped lang="scss">

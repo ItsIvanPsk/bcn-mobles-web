@@ -10,14 +10,14 @@
   
   <section class="p-6 relative min-h-[50vh] flex flex-col">
     <!-- Productos -->
-    <div v-if="products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
+    <div v-if="products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-1 justify-items-center">
       <div
         v-for="product in products"
         :key="product.id"
-        class="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white cursor-pointer min-w-[80vh] max-h-[85vh]"
+        class="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white cursor-pointer w-full max-w-[340px]"
         @click="goToDetail(product)"
       >
-        <div class="relative w-full aspect-[4/3] bg-gray-100">
+        <div class="relative w-full aspect-[3/2] bg-gray-100">
           <img
             :src="product.mainImage?.src"
             :alt="product.mainImage?.alt || product.name"
@@ -26,29 +26,31 @@
         </div>
         <div class="p-4">
           <h3 class="text-base md:text-lg font-semibold mb-1">{{ product.name }}</h3>
-          <p class="text-sm text-gray-600">Marca: {{ product.brand }}</p>
           <p class="text-sm text-gray-600">
-            Categorías: 
             <span v-for="(cat, i) in product.categories" :key="cat.id">
-              {{ cat.name }}<span v-if="i < product.categories.length - 1">, </span>
+              <i>{{ cat.name }}</i>
+              <span v-if="i < product.categories.length - 1">, </span>
             </span>
           </p>
-          <p v-if="product.sizes?.length" class="text-sm text-gray-600">
-            Tamaños: {{ product.sizes.join(', ') }}
-          </p>
-          <p v-if="product.colors?.length" class="text-sm text-gray-600">
-            Colores: {{ product.colors.map(c => c.name).join(', ') }}
+          <p class="text-sm text-gray-600">{{ product.description }}</p>
+          
+          <p v-if="product.colors?.length" class="flex items-center gap-2 mt-2">
+            <span
+              v-for="c in product.colors"
+              :key="c.name"
+              class="w-5 h-5 rounded-full border border-gray-300"
+              :style="{ backgroundColor: c.color || c.name }"
+              :title="c.name"
+            ></span>
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Mensaje si no hay productos -->
     <div v-else class="flex-1 flex items-center justify-center text-gray-600 text-lg">
       No se han encontrado productos con los filtros seleccionados.
     </div>
 
-    <!-- Loader infinito -->
     <div ref="infiniteTrigger" class="h-12 flex justify-center items-center mt-8">
       <span v-if="loading">Cargando más...</span>
     </div>
@@ -127,17 +129,19 @@
   </section>
 </template>
 
+
+
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mockedProducts } from '../../../main-page/interfaces/ProductModel'
+import { mockedProducts, ProductModel } from '../../../main-page/interfaces/ProductModel'
 import BcnDiscountHero from '../../../../components/BcnDiscountHero.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const products = ref<any[]>([])
-const allProducts = ref<any[]>([])
+const products = ref<ProductModel[]>([])
+const allProducts = ref<ProductModel[]>([])
 const page = ref(1)
 const perPage = 8
 const loading = ref(false)
@@ -154,7 +158,6 @@ const filters = reactive({
 
 const localFilters = reactive({ ...filters })
 
-// Filtros base mock
 const categories = [
   { id: 1, name: 'Sillas' },
   { id: 2, name: 'Mesas' },
@@ -236,8 +239,8 @@ function applyFilters() {
 }
 
 function clearFilters() {
-  Object.keys(filters).forEach((k) => (filters[k] = ''))
-  Object.keys(localFilters).forEach((k) => (localFilters[k] = ''))
+  Object.keys(filters).forEach((k) => (filters[k as keyof typeof filters] = ''))
+  Object.keys(localFilters).forEach((k) => (localFilters[k as keyof typeof localFilters] = ''))
   router.replace({ query: {} })
   resetAndFetch()
 }

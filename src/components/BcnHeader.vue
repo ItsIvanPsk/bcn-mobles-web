@@ -47,7 +47,7 @@
 
 
       <!-- Servicios -->
-      <div class="group relative">
+      <div class="group relative mr-4">
         <button class="text-darkgray">Servicios</button>
         <div
           class="absolute right-0 top-full hidden group-hover:block bg-white border border-lightgray rounded shadow-md min-w-[200px] z-50"
@@ -165,7 +165,7 @@
 
       <!-- Admin -->
       <button
-        v-if="isFullAdmin"
+        v-if="isUserAdmin"
         class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100"
         aria-label="Admin"
         @click="router.push('/bo-panel')"
@@ -187,12 +187,15 @@ const q = ref("");
 const searchOpen = ref(false);
 const router = useRouter();
 
-// Mock de datos de productos/servicios
+import { useAuthStore } from '../store/auth';
+const auth = useAuthStore();
+const isUserAdmin = computed(() => auth.isFullAdmin);
+
+
 const categories = ref<any[]>([]);
 const services = ref<any[]>([]);
 
 async function fetchHeaderData() {
-  // Simulación de llamada a API
   return new Promise<{ categories: any[]; services: any[] }>((resolve) => {
     setTimeout(() => {
       resolve({
@@ -255,10 +258,7 @@ const isLoggedIn = computed(() => {
   return !!localStorage.getItem("user");
 });
 
-const isFullAdmin = computed(() => {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  return user?.role === "fullAdmin";
-});
+// Ya importado y declarado arriba para el botón admin
 
 function goUserPanel() {
   if (isLoggedIn.value) {

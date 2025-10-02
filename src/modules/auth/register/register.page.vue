@@ -93,6 +93,7 @@
 import { Form, Field, ErrorMessage } from "vee-validate"
 import * as yup from "yup"
 import { useRouter } from "vue-router"
+import { useAuthStore } from '../../../store/auth';
 
 const router = useRouter()
 
@@ -112,6 +113,7 @@ const schema = yup.object({
     .oneOf([true], "Debes aceptar las condiciones y la newsletter para registrarte"),
 })
 
+const auth = useAuthStore();
 const onRegister = async (values) => {
   console.log("Mock register:", values)
 
@@ -129,6 +131,14 @@ const onRegister = async (values) => {
       newsletter: true,
     })
   )
+
+  auth.login({
+    firstName: values.firstName,
+    lastName: values.lastName,
+    email: values.email,
+    type: "user",
+    newsletter: true,
+  });
 
   router.push("/user-panel")
 }
